@@ -21,6 +21,8 @@ import {
   evBackToGameTitle,
   evRemotePlayerWentOffline,
   evGameOver,
+  evLocalQuit,
+  evLocalSaveThenQuit,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage.jsx";
@@ -58,6 +60,12 @@ function App() {
     });
     eb.subscribe(evGameOver(), () => {
       setPage(pgGameOver);
+    });
+    eb.subscribe(evLocalQuit(), () => {
+      setPage(pgGameTitle);
+    });
+    eb.subscribe(evLocalSaveThenQuit(), () => {
+      setPage(pgGameTitle);
     });
     note("set up subscribers");
   }, []);

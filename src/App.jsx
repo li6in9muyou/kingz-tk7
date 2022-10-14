@@ -2,9 +2,11 @@ import GameTitle from "./pages/GameTitle.jsx";
 import { useContext, useEffect, useState } from "react";
 import {
   pgChooseOpponentType,
+  pgGameOver,
   pgGamePage,
   pgGameTitle,
   pgMySavedGame,
+  pgRemotePlayerWentOffline,
   pgWaitingInQueue,
 } from "./lib/PageSymbol.js";
 import ChooseOpponentType from "./pages/ChooseOpponentType.jsx";
@@ -16,11 +18,16 @@ import {
   evStartMatching,
   evStartNewGame,
   evResumeSavedGame,
+  evBackToGameTitle,
+  evRemotePlayerWentOffline,
+  evGameOver,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage.jsx";
 import WaitingInQueue from "./pages/WaitingInQueue.jsx";
 import MySavedGame from "./pages/MySavedGame.jsx";
+import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
+import GameOver from "./pages/GameOver.jsx";
 
 const note = debug("App.jsx");
 
@@ -43,6 +50,15 @@ function App() {
     eb.subscribe(evMySavedGame(), () => {
       setPage(pgMySavedGame);
     });
+    eb.subscribe(evBackToGameTitle(), () => {
+      setPage(pgGameTitle);
+    });
+    eb.subscribe(evRemotePlayerWentOffline(), () => {
+      setPage(pgRemotePlayerWentOffline);
+    });
+    eb.subscribe(evGameOver(), () => {
+      setPage(pgGameOver);
+    });
     note("set up subscribers");
   }, []);
 
@@ -54,6 +70,8 @@ function App() {
         {page === pgChooseOpponentType && <ChooseOpponentType />}
         {page === pgGamePage && <GamePage />}
         {page === pgWaitingInQueue && <WaitingInQueue />}
+        {page === pgRemotePlayerWentOffline && <RemotePlayerWentOffline />}
+        {page === pgGameOver && <GameOver />}
       </NavBar>
     </>
   );

@@ -13,3 +13,5 @@ export const evGameOver = (winner) => ({
   type: "游戏正常结束",
   payload: winner,
 });
+export const evBackToGameTitle = () => "返回主界面";
+export const evRemotePlayerWentOffline = () => "你的对手离开了对局";

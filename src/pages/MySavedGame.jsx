@@ -10,15 +10,24 @@ function MySavedGame() {
   }
   return (
     <>
-      <h1>此处显示各历史对局</h1>
-      <button onClick={() => eb.publish(evBackToGameTitle())}>
-        返回主菜单
-      </button>
-      {range(1, 6).map((idx) => (
-        <button key={idx} onClick={() => handleResumeGame(idx)}>
-          从残局{idx}开始玩
-        </button>
-      ))}
+      <h1 className={"header"}>此处显示各历史对局</h1>
+      <main className="appContainer">
+        <div
+          className={"btn btn-warn"}
+          onClick={() => eb.publish(evBackToGameTitle())}
+        >
+          返回主菜单
+        </div>
+        {range(1, 6).map((idx) => (
+          <div
+            className={"btn"}
+            key={idx}
+            onClick={() => handleResumeGame(idx)}
+          >
+            从残局{idx}开始玩
+          </div>
+        ))}
+      </main>
     </>
   );
 }

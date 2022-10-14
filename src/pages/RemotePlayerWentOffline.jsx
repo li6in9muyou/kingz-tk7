@@ -6,11 +6,15 @@ function RemotePlayerWentOffline() {
   const eb = useContext(EventBusContext);
   return (
     <>
-      <h1>你的对手离开了对局</h1>
-      <button onClick={() => eb.publish(evBackToGameTitle())}>
-        我也不玩了
-      </button>
-      <button onClick={() => eb.publish(evStartMatching())}>重新匹配</button>
+      <main className="appContainer">
+        <h1 className={"header"}>你的对手离开了对局</h1>
+        <div className={"btn"} onClick={() => eb.publish(evBackToGameTitle())}>
+          我也不玩了
+        </div>
+        <div className={"btn"} onClick={() => eb.publish(evStartMatching())}>
+          重新匹配
+        </div>
+      </main>
     </>
   );
 }

@@ -6,25 +6,32 @@ import {
   evStartMatching,
 } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
-import { cssDebugBtn } from "../lib/DebugBtn.jsx";
 
 function Waiting() {
   const eb = useContext(EventBusContext);
   return (
     <>
-      <h1>等待中</h1>
-      <button onClick={() => eb.publish(evStartLocalComputerGame())}>
-        不等了，跟电脑玩
-      </button>
-      <button
-        css={cssDebugBtn}
-        onClick={() => eb.publish(evCloudDeclineMatch())}
-      >
-        服务器返回失败或者客户端决定不再等待
-      </button>
-      <button css={cssDebugBtn} onClick={() => eb.publish(evMatchIsMade())}>
-        匹配成功
-      </button>
+      <main className={"appContainer"}>
+        <h1 className={"header"}>等待中</h1>
+        <div
+          className={"btn"}
+          onClick={() => eb.publish(evStartLocalComputerGame())}
+        >
+          不等了，跟电脑玩
+        </div>
+        <div
+          className={"btn debug"}
+          onClick={() => eb.publish(evCloudDeclineMatch())}
+        >
+          服务器返回失败或者客户端决定不再等待
+        </div>
+        <div
+          className={"btn debug"}
+          onClick={() => eb.publish(evMatchIsMade())}
+        >
+          匹配成功
+        </div>
+      </main>
     </>
   );
 }
@@ -34,10 +41,8 @@ function MatchFailed({ onContinueWaiting }) {
   return (
     <>
       <h1>匹配失败</h1>
-      <button onClick={onContinueWaiting}>继续等</button>
-      <button onClick={() => eb.publish(evStartLocalComputerGame())}>
-        跟电脑玩
-      </button>
+      <div onClick={onContinueWaiting}>继续等</div>
+      <div onClick={() => eb.publish(evStartLocalComputerGame())}>跟电脑玩</div>
     </>
   );
 }

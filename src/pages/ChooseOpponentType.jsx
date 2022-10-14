@@ -6,11 +6,18 @@ function ChooseOpponentType() {
   const eb = useContext(EventBusContext);
   return (
     <>
-      <h1>跟电脑玩或者匹配玩家</h1>
-      <button onClick={() => eb.publish(evStartLocalComputerGame())}>
-        和电脑
-      </button>
-      <button onClick={() => eb.publish(evStartMatching())}>匹配玩家</button>
+      <main className="appContainer">
+        <h1 className={"header"}>跟电脑玩或者匹配玩家</h1>
+        <div
+          className={"btn"}
+          onClick={() => eb.publish(evStartLocalComputerGame())}
+        >
+          和电脑
+        </div>
+        <div className={"btn"} onClick={() => eb.publish(evStartMatching())}>
+          匹配玩家
+        </div>
+      </main>
     </>
   );
 }

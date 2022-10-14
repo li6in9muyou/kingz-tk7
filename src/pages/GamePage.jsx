@@ -1,6 +1,11 @@
 import { useContext } from "react";
 import { EventBusContext } from "../lib/GlobalVariable.js";
-import { evGameOver, evLocalQuit, evLocalSaveThenQuit } from "../lib/Events.js";
+import {
+  evGameOver,
+  evLocalQuit,
+  evLocalSaveThenQuit,
+  evRemotePlayerWentOffline,
+} from "../lib/Events.js";
 import { cssDebugBtn } from "../lib/DebugBtn.jsx";
 
 function GamePage() {
@@ -18,6 +23,12 @@ function GamePage() {
         }
       >
         游戏正常结束
+      </button>
+      <button
+        css={cssDebugBtn}
+        onClick={() => eb.publish(evRemotePlayerWentOffline())}
+      >
+        远端玩家因故离线
       </button>
     </>
   );

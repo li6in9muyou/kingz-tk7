@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import {
   evCloudDeclineMatch,
+  evMatchIsMade,
   evStartLocalComputerGame,
   evStartMatching,
 } from "../lib/Events.js";
@@ -20,6 +21,9 @@ function Waiting() {
         onClick={() => eb.publish(evCloudDeclineMatch())}
       >
         服务器返回失败或者客户端决定不再等待
+      </button>
+      <button css={cssDebugBtn} onClick={() => eb.publish(evMatchIsMade())}>
+        匹配成功
       </button>
     </>
   );

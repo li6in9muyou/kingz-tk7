@@ -23,6 +23,7 @@ import {
   evGameOver,
   evLocalQuit,
   evLocalSaveThenQuit,
+  evMatchIsMade,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage.jsx";
@@ -66,6 +67,9 @@ function App() {
     });
     eb.subscribe(evLocalSaveThenQuit(), () => {
       setPage(pgGameTitle);
+    });
+    eb.subscribe(evMatchIsMade(), () => {
+      setPage(pgGamePage);
     });
     note("set up subscribers");
   }, []);

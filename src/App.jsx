@@ -43,7 +43,7 @@ function App() {
     eb.subscribe(evMySavedGame(), () => {
       setPage(pgMySavedGame);
     });
-    note('set up subscribers')
+    note("set up subscribers");
   }, []);
 
   return (

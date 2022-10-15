@@ -1,7 +1,20 @@
 import { rest } from "msw";
-import { last, repeat } from "lodash-es";
+import { last, random, repeat, times } from "lodash-es";
+import { sleep } from "../lib/utility";
 
 export const handlers = [
+  rest.get("/saved_games/:player_id", async (_, res, ctx) => {
+    await sleep(1000);
+    return res(
+      ctx.status(200),
+      ctx.json(
+        times(random(3, 10), (idx) => ({
+          idx,
+          match_token: `${idx + 1}${idx + 1}ABCDABCDAB`,
+        }))
+      )
+    );
+  }),
   rest.post("/register", async (req, res, ctx) => {
     if (
       localStorage.getItem("kingz-nickName") !== null &&

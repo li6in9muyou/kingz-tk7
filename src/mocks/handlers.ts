@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { last, random, repeat, times } from "lodash-es";
+import { last, random, times } from "lodash-es";
 import { sleep } from "../lib/utility";
 
 export const handlers = [
@@ -15,32 +15,13 @@ export const handlers = [
       )
     );
   }),
-  rest.post("/register", async (req, res, ctx) => {
-    if (
-      localStorage.getItem("kingz-nickName") !== null &&
-      localStorage.getItem("kingz-secret") !== null
-    ) {
-      return res(ctx.status(409), ctx.text("user already exists"));
-    }
-
-    const text = await req.text();
-    const [nk_pair, secret_pair] = text.split("&");
-    const [nnk, nickName] = nk_pair?.split("=");
-    const [sk, secret] = secret_pair?.split("=");
-    if (
-      nnk !== "nickName" ||
-      sk !== "secret" ||
-      sk === undefined ||
-      nnk === undefined
-    ) {
+  rest.get("/player_handle", async (req, res, ctx) => {
+    await sleep(1000);
+    const secret = req.url.searchParams.get("secret");
+    if (null === secret) {
       return res(ctx.status(400));
-    } else {
-      const n = decodeURIComponent(nickName);
-      const s = decodeURIComponent(secret);
-      localStorage.setItem("kingz-nickName", n);
-      localStorage.setItem("kingz-secret", s);
-      return res(ctx.status(200), ctx.text(`p${repeat("Y", 11)}`));
     }
+    return res(ctx.status(200), ctx.text(`p${secret}`));
   }),
   rest.post("/match/:player_id", async (req, res, ctx) => {
     const player_id = last(req.url.pathname.split("/"));

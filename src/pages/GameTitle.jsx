@@ -1,12 +1,17 @@
-import { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { evMySavedGame, evStartNewGame } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { css } from "@emotion/react";
 import NameGen from "../lib/NameGen.js";
 import ContentEditable from "react-contenteditable";
 import { noop } from "lodash-es";
+import fetch_local_identity, {
+  get_local_nick_name,
+  has_registered,
+} from "../lib/LocalIdentity";
+import { BarLoader } from "react-spinners";
 
-function Welcome() {
+function Welcome(props) {
   return (
     <div
       css={css`
@@ -15,13 +20,13 @@ function Welcome() {
       `}
       className={"headline"}
     >
-      欢迎，勇敢的小明
+      欢迎，{props.name}
     </div>
   );
 }
 
-function AskLocalIdentity() {
-  const [name, setName] = useState(NameGen());
+function AskLocalIdentity(props) {
+  const { name, setName } = props;
   return (
     <div
       css={css`
@@ -72,9 +77,46 @@ function AskLocalIdentity() {
   );
 }
 
+function PleaseWait() {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      `}
+    >
+      <span>加载中</span>
+      <BarLoader color={"#FFFFFF"} />
+    </div>
+  );
+}
+
 function GameTitle() {
   const eb = useContext(EventBusContext);
-  const noLocalIdentity = Math.random() > 0.5;
+  const [hasRegistered, setHasRegistered] = useState(false);
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState(NameGen());
+
+  useEffect(() => {
+    const b = has_registered();
+    setHasRegistered(b);
+    if (b) {
+      setName(get_local_nick_name());
+    }
+  }, []);
+
+  function handleStartNewGame() {
+    if (hasRegistered) {
+      return eb.publish(evStartNewGame());
+    }
+
+    setShow(true);
+    fetch_local_identity(name).then(() => {
+      setShow(false);
+      eb.publish(evStartNewGame());
+    });
+  }
 
   return (
     <div
@@ -87,11 +129,14 @@ function GameTitle() {
       <main>
         <h1 className={"header"}>Kingz 游戏</h1>
         <section className={"appContainer"}>
-          {noLocalIdentity && <AskLocalIdentity />}
-          {!noLocalIdentity && <Welcome />}
-          <div className={"btn"} onClick={() => eb.publish(evStartNewGame())}>
-            开始新对局
-          </div>
+          {!hasRegistered && <AskLocalIdentity name={name} setName={setName} />}
+          {hasRegistered && <Welcome name={name} />}
+          {show && <PleaseWait />}
+          {!show && (
+            <div className={"btn"} onClick={handleStartNewGame}>
+              开始新对局
+            </div>
+          )}
           <div className={"btn"} onClick={() => eb.publish(evMySavedGame())}>
             我的历史对局
           </div>

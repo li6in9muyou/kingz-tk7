@@ -9,7 +9,7 @@ import fetch_local_identity, {
   get_local_nick_name,
   has_registered,
 } from "../lib/LocalIdentity";
-import { BarLoader } from "react-spinners";
+import { PleaseWait } from "../components/PleaseWait.jsx";
 
 function Welcome(props) {
   return (
@@ -73,21 +73,6 @@ function AskLocalIdentity(props) {
           onChange={noop}
         />
       </div>
-    </div>
-  );
-}
-
-function PleaseWait() {
-  return (
-    <div
-      css={css`
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      `}
-    >
-      <span>加载中</span>
-      <BarLoader color={"#FFFFFF"} />
     </div>
   );
 }

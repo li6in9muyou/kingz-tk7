@@ -24,6 +24,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.text(`p${secret}`));
   }),
   rest.post("/match/:player_id", async (req, res, ctx) => {
+    await sleep(1000);
     const player_id = last(req.url.pathname.split("/"));
     return res(ctx.status(200), ctx.text(`GridToken${player_id}`));
   }),

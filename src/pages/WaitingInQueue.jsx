@@ -6,19 +6,30 @@ import {
   evStartMatching,
 } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
+import { cancel_match } from "../lib/GameHttpClient";
+import { PleaseWait } from "../components/PleaseWait.jsx";
 
 function Waiting() {
   const eb = useContext(EventBusContext);
+  const [loading, setLoading] = useState(false);
+
+  function handleCancelMatching() {
+    setLoading(true);
+    cancel_match().then(() => {
+      eb.publish(evStartLocalComputerGame());
+    });
+  }
+
   return (
     <>
       <main className={"appContainer"}>
         <h1 className={"header"}>等待中</h1>
-        <div
-          className={"btn"}
-          onClick={() => eb.publish(evStartLocalComputerGame())}
-        >
-          不等了，跟电脑玩
-        </div>
+        {loading && <PleaseWait />}
+        {!loading && (
+          <div className={"btn"} onClick={handleCancelMatching}>
+            不等了，跟电脑玩
+          </div>
+        )}
         <div
           className={"btn debug"}
           onClick={() => eb.publish(evCloudDeclineMatch())}

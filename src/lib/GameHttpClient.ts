@@ -71,9 +71,6 @@ export function poll(eb) {
     return;
   }
   lock = true;
-  if (localStorage.getItem("making") === null) {
-    return;
-  }
   poll_match()
     .then((r) => {
       lock = false;

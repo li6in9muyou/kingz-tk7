@@ -47,11 +47,9 @@ function App() {
       setPage(pgChooseOpponentType);
     });
     eb.subscribe(evStartPollingMatchStatus(), () => {
-      localStorage.setItem("making", "");
       poll(eb);
     });
     eb.subscribe(evMatchIsMade(), () => {
-      localStorage.removeItem("making");
       setPage(pgGamePage);
     });
     eb.subscribe(evStartMatching(), () => {

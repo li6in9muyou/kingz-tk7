@@ -28,6 +28,19 @@ export async function poll_match() {
   while (r?.status !== 200 && retry > 0) {
     try {
       r = await axios.get(`/match/${match_handle}/opponent`);
+      switch (r.data) {
+        case "success": {
+          return true;
+        }
+        case "fail":
+        case "waiting": {
+          return false;
+        }
+        default: {
+          console.warn(`poll_match(): unknown status code ${r.status}`, r);
+          return "err";
+        }
+      }
     } catch (error) {
       console.groupCollapsed("GameHttpClient error:");
       if (error.response) {
@@ -48,30 +61,22 @@ export async function poll_match() {
     }
     retry -= 1;
   }
-  if (r?.data === undefined) {
-    throw "poll_match_fail";
-  }
-  switch (r.data) {
-    case "success": {
-      return true;
-    }
-    case "fail":
-    case "waiting": {
-      return false;
-    }
-    default: {
-      console.warn(`poll_match(): unknown status code ${r.status}`, r);
-      return "err";
-    }
-  }
+  throw "poll_match_fail";
 }
 
+let lock = false;
+
 export function poll(eb) {
+  if (lock) {
+    return;
+  }
+  lock = true;
   if (localStorage.getItem("making") === null) {
     return;
   }
   poll_match()
     .then((r) => {
+      lock = false;
       if (r) {
         eb.publish(evMatchIsMade());
       } else {
@@ -79,6 +84,7 @@ export function poll(eb) {
       }
     })
     .catch((err) => {
+      lock = false;
       if (err === "poll_match_fail") {
         eb.publish(evCloudDeclineMatch());
       } else {

@@ -4,6 +4,7 @@ import {
   evMatchIsMade,
   evStartLocalComputerGame,
   evStartMatching,
+  evStartPollingMatchStatus,
 } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { cancel_match } from "../lib/GameHttpClient";
@@ -13,12 +14,21 @@ function Waiting() {
   const eb = useContext(EventBusContext);
   const [loading, setLoading] = useState(false);
 
+  function onCloudDeclineMatch() {
+    eb.publish(evCloudDeclineMatch());
+  }
+
   function handleCancelMatching() {
     setLoading(true);
     cancel_match().then(() => {
+      setLoading(false);
       eb.publish(evStartLocalComputerGame());
     });
   }
+
+  useEffect(() => {
+    eb.publish(evStartPollingMatchStatus());
+  }, []);
 
   return (
     <>
@@ -30,10 +40,7 @@ function Waiting() {
             不等了，跟电脑玩
           </div>
         )}
-        <div
-          className={"btn debug"}
-          onClick={() => eb.publish(evCloudDeclineMatch())}
-        >
+        <div className={"btn debug"} onClick={onCloudDeclineMatch}>
           服务器返回失败或者客户端决定不再等待
         </div>
         <div

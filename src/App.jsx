@@ -24,6 +24,7 @@ import {
   evLocalQuit,
   evLocalSaveThenQuit,
   evMatchIsMade,
+  evStartPollingMatchStatus,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage.jsx";
@@ -31,6 +32,7 @@ import WaitingInQueue from "./pages/WaitingInQueue.jsx";
 import MySavedGame from "./pages/MySavedGame.jsx";
 import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import GameOver from "./pages/GameOver.jsx";
+import { poll } from "./lib/GameHttpClient";
 
 const note = debug("App.jsx");
 
@@ -43,6 +45,14 @@ function App() {
     });
     eb.subscribe(evResumeSavedGame(), () => {
       setPage(pgChooseOpponentType);
+    });
+    eb.subscribe(evStartPollingMatchStatus(), () => {
+      localStorage.setItem("making", "");
+      poll(eb);
+    });
+    eb.subscribe(evMatchIsMade(), () => {
+      localStorage.removeItem("making");
+      setPage(pgGamePage);
     });
     eb.subscribe(evStartMatching(), () => {
       setPage(pgWaitingInQueue);
@@ -67,9 +77,6 @@ function App() {
     });
     eb.subscribe(evLocalSaveThenQuit(), () => {
       setPage(pgGameTitle);
-    });
-    eb.subscribe(evMatchIsMade(), () => {
-      setPage(pgGamePage);
     });
     note("set up subscribers");
   }, []);

@@ -1,6 +1,17 @@
 import { rest } from "msw";
-import { last, random, times } from "lodash-es";
+import { last, random, times, constant } from "lodash-es";
 import { sleep } from "../lib/utility";
+
+let _current = 0;
+const _matching_status = [...times(4, constant("waiting")), "success"];
+function next_matching_status() {
+  const s = _matching_status[_current];
+  _current += 1;
+  if (_current === _matching_status.length) {
+    _current = 0;
+  }
+  return s;
+}
 
 export const handlers = [
   rest.get("/saved_games/:player_id", async (_, res, ctx) => {
@@ -31,5 +42,9 @@ export const handlers = [
   rest.delete("/match/:player_id", async (req, res, ctx) => {
     await sleep(1000);
     return res(ctx.status(200));
+  }),
+  rest.get("/match/:match_id/opponent", async (req, res, ctx) => {
+    await sleep(1000);
+    return res(ctx.text(next_matching_status()));
   }),
 ];

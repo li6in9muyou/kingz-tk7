@@ -1,37 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { evBackToGameTitle, evResumeSavedGame } from "../lib/Events.js";
-import axios from "axios";
-import { BarLoader } from "react-spinners";
-import { sleep } from "../lib/utility";
-import { css } from "@emotion/react";
+import { PleaseWait } from "../components/PleaseWait";
+import { isEmpty } from "lodash-es";
 
-async function fetchSavedGames() {
-  for (let i = 0; i < 3; i++) {
-    try {
-      return (await axios.get("/saved_games/pABCDABCDABCD")).data;
-    } catch (e) {
-      await sleep(300);
-    }
-  }
-  return [];
-}
-
-function MySavedGame() {
+function MySavedGame({ savedGames }) {
   const eb = useContext(EventBusContext);
   function handleResumeGame(match_token) {
     eb.publish(evResumeSavedGame(match_token));
   }
-  const [savedGames, setSavedGames] = useState([]);
-  const [show, setSpinner] = useState(true);
-  const turnOffSpinner = () => setSpinner(false);
 
-  useEffect(() => {
-    fetchSavedGames().then((r) => {
-      turnOffSpinner();
-      setSavedGames(r);
-    });
-  }, []);
+  const show = isEmpty(savedGames);
 
   return (
     <>
@@ -43,18 +22,7 @@ function MySavedGame() {
         >
           返回主菜单
         </div>
-        {show && (
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-              gap: 10px;
-            `}
-          >
-            <span>加载中</span>
-            <BarLoader color={"#FFFFFF"} />
-          </div>
-        )}
+        {show && <PleaseWait />}
         {savedGames.map((save) => {
           const { idx, match_token } = save;
           return (

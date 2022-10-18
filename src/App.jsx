@@ -35,11 +35,13 @@ import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import GameOver from "./pages/GameOver.jsx";
 import { poll } from "./lib/GameHttpClient";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
+import fetchSavedGames from "./lib/FetchSavedGames.js";
 
 const note = debug("App.jsx");
 
 function App() {
   const [page, setPage] = useState(pgGameTitle);
+  const [savedGames, setSavedGames] = useState([]);
   const eb = useContext(EventBusContext);
   useEffect(() => {
     eb.subscribe(evRegister(), (name) => {
@@ -64,6 +66,9 @@ function App() {
       setPage(pgGamePage);
     });
     eb.subscribe(evMySavedGame(), () => {
+      fetchSavedGames().then((r) => {
+        setSavedGames(r);
+      });
       setPage(pgMySavedGame);
     });
     eb.subscribe(evBackToGameTitle(), () => {
@@ -88,7 +93,7 @@ function App() {
     <>
       <NavBar>
         {page === pgGameTitle && <GameTitle hasRegistered={has_registered()} />}
-        {page === pgMySavedGame && <MySavedGame />}
+        {page === pgMySavedGame && <MySavedGame savedGames={savedGames} />}
         {page === pgChooseOpponentType && <ChooseOpponentType />}
         {page === pgGamePage && <GamePage />}
         {page === pgWaitingInQueue && <WaitingInQueue />}

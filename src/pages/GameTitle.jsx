@@ -103,6 +103,15 @@ function GameTitle(props) {
     }
   }
 
+  function handleGotoMySavedGame() {
+    if (hasRegistered) {
+      eb.publish(evStartNewGame());
+    } else {
+      eb.publish(evRegister(name));
+    }
+    return eb.publish(evMySavedGame());
+  }
+
   return (
     <div
       css={css`
@@ -122,7 +131,7 @@ function GameTitle(props) {
               开始新对局
             </div>
           )}
-          <div className={"btn"} onClick={() => eb.publish(evMySavedGame())}>
+          <div className={"btn"} onClick={handleGotoMySavedGame}>
             我的历史对局
           </div>
         </section>

@@ -21,3 +21,4 @@ export const evRegister = (nickname) => ({
   type: "注册新用户",
   payload: nickname,
 });
+export const evCancelMatching = () => "不等了，跟电脑玩";

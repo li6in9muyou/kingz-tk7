@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import {
+  evCancelMatching,
   evCloudDeclineMatch,
   evMatchIsMade,
   evStartLocalComputerGame,
@@ -62,14 +63,16 @@ function MatchFailed({ onContinueWaiting }) {
       <div className={"btn"} onClick={onContinueWaiting}>
         继续等
       </div>
-      <div
-        className={"btn"}
-        onClick={() => eb.publish(evStartLocalComputerGame())}
-      >
+      <div className={"btn"} onClick={handleCancelMatching}>
         跟电脑玩
       </div>
     </main>
   );
+
+  function handleCancelMatching() {
+    eb.publish(evCancelMatching());
+    eb.publish(evStartLocalComputerGame());
+  }
 }
 
 function WaitingInQueue() {

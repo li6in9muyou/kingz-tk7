@@ -5,7 +5,10 @@ import { Book, sleep } from "./utility";
 
 type MatchHandle = string;
 
+let stopPolling = false;
+
 export async function try_match(): Promise<MatchHandle> {
+  stopPolling = false;
   const local_handle = await fetch_local_identity(null);
   const match_handle = (await axios.post(`/match/${local_handle.handle}`)).data;
   Book.player_id = match_handle;
@@ -13,6 +16,7 @@ export async function try_match(): Promise<MatchHandle> {
 }
 
 export async function cancel_match() {
+  stopPolling = true;
   const local_handle = await fetch_local_identity(null);
   await axios.delete(`/match/${local_handle.handle}`);
   Book.player_id = null;
@@ -73,6 +77,9 @@ export function poll(eb) {
   lock = true;
   poll_match()
     .then((r) => {
+      if (stopPolling) {
+        return;
+      }
       lock = false;
       if (r) {
         eb.publish(evMatchIsMade());

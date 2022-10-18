@@ -8,6 +8,8 @@ export interface OnlineHandle {
   nickName: string;
 }
 
+export const get_local_nick_name = () => Book.nick_name;
+
 function get_secret() {
   return getBrowserFingerprint();
 }

@@ -8,18 +8,18 @@ type MatchHandle = string;
 export async function try_match(): Promise<MatchHandle> {
   const local_handle = await fetch_local_identity(null);
   const match_handle = (await axios.post(`/match/${local_handle.handle}`)).data;
-  Book.handle = match_handle;
+  Book.player_id = match_handle;
   return match_handle;
 }
 
 export async function cancel_match() {
   const local_handle = await fetch_local_identity(null);
   await axios.delete(`/match/${local_handle.handle}`);
-  Book.handle = null;
+  Book.player_id = null;
 }
 
 export async function poll_match() {
-  const match_handle = Book.handle;
+  const match_handle = Book.player_id;
   if (match_handle === null) {
     throw "no match handle is found, can no poll";
   }

@@ -19,7 +19,7 @@ export function has_registered() {
 }
 
 async function fetch_handle(secret, name: string) {
-  const cache = Book.handle;
+  const cache = Book.player_id;
   if (cache !== null) {
     return cache;
   }
@@ -31,7 +31,7 @@ async function fetch_handle(secret, name: string) {
       },
     })
   ).data;
-  Book.handle = handle;
+  Book.player_id = handle;
   return handle;
 }
 

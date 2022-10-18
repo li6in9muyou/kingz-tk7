@@ -2,15 +2,15 @@ export const sleep = (milliSeconds: number) =>
   new Promise((resolve) => setTimeout(resolve, milliSeconds));
 
 class LocalStore {
-  get handle(): string {
-    return localStorage.getItem("kingz-handle");
+  get player_id(): string {
+    return localStorage.getItem("kingz-player-handle");
   }
 
-  set handle(value: string) {
+  set player_id(value: string) {
     if (value === null) {
-      localStorage.removeItem("kingz-handle");
+      localStorage.removeItem("kingz-player-handle");
     }
-    localStorage.setItem("kingz-handle", value);
+    localStorage.setItem("kingz-player-handle", value);
   }
 
   get secret(): string {

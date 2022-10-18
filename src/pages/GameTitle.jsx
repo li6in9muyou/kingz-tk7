@@ -1,13 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { evMySavedGame, evStartNewGame } from "../lib/Events.js";
+import { evMySavedGame, evRegister, evStartNewGame } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { css } from "@emotion/react";
 import NameGen from "../lib/NameGen.js";
 import ContentEditable from "react-contenteditable";
-import fetch_local_identity, {
-  get_local_nick_name,
-  has_registered,
-} from "../lib/LocalIdentity";
+import { get_local_nick_name } from "../lib/LocalIdentity";
 import { PleaseWait } from "../components/PleaseWait.jsx";
 
 function Welcome(props) {
@@ -81,30 +78,29 @@ function AskLocalIdentity(props) {
   );
 }
 
-function GameTitle() {
+function GameTitle(props) {
+  const { hasRegistered } = props;
+
   const eb = useContext(EventBusContext);
-  const [hasRegistered, setHasRegistered] = useState(false);
   const [show, setShow] = useState(false);
-  const [name, setName] = useState(NameGen());
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    const b = has_registered();
-    setHasRegistered(b);
-    if (b) {
+    if (hasRegistered) {
       setName(get_local_nick_name());
+    } else {
+      setName(NameGen());
     }
-  }, []);
+  }, [hasRegistered]);
 
   function handleStartNewGame() {
+    setShow(true);
     if (hasRegistered) {
       return eb.publish(evStartNewGame());
-    }
-
-    setShow(true);
-    fetch_local_identity(name).then(() => {
-      setShow(false);
+    } else {
+      eb.publish(evRegister(name));
       eb.publish(evStartNewGame());
-    });
+    }
   }
 
   return (

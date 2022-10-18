@@ -25,6 +25,7 @@ import {
   evLocalSaveThenQuit,
   evMatchIsMade,
   evStartPollingMatchStatus,
+  evRegister,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage.jsx";
@@ -33,6 +34,7 @@ import MySavedGame from "./pages/MySavedGame.jsx";
 import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import GameOver from "./pages/GameOver.jsx";
 import { poll } from "./lib/GameHttpClient";
+import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 
 const note = debug("App.jsx");
 
@@ -40,6 +42,9 @@ function App() {
   const [page, setPage] = useState(pgGameTitle);
   const eb = useContext(EventBusContext);
   useEffect(() => {
+    eb.subscribe(evRegister(), (name) => {
+      fetch_local_identity(name);
+    });
     eb.subscribe(evStartNewGame(), () => {
       setPage(pgChooseOpponentType);
     });
@@ -82,7 +87,7 @@ function App() {
   return (
     <>
       <NavBar>
-        {page === pgGameTitle && <GameTitle />}
+        {page === pgGameTitle && <GameTitle hasRegistered={has_registered()} />}
         {page === pgMySavedGame && <MySavedGame />}
         {page === pgChooseOpponentType && <ChooseOpponentType />}
         {page === pgGamePage && <GamePage />}

@@ -28,6 +28,14 @@ class LocalStore {
   set nick_name(value) {
     localStorage.setItem("kingz-nickName", value);
   }
+
+  get match_handle() {
+    return localStorage.getItem("kingz-match-handle");
+  }
+
+  set match_handle(value) {
+    localStorage.setItem("kingz-match-handle", value);
+  }
 }
 
 export const Book = new LocalStore();

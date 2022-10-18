@@ -8,7 +8,7 @@ import {
   evStartPollingMatchStatus,
 } from "../lib/Events.js";
 import { EventBusContext } from "../lib/GlobalVariable.js";
-import { cancel_match } from "../lib/GameHttpClient";
+import { cancel_match } from "../lib/MatchMaker";
 import { PleaseWait } from "../components/PleaseWait.jsx";
 
 function Waiting() {

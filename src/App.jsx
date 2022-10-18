@@ -34,7 +34,7 @@ import WaitingInQueue from "./pages/WaitingInQueue.jsx";
 import MySavedGame from "./pages/MySavedGame.jsx";
 import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import GameOver from "./pages/GameOver.jsx";
-import { cancel_match, poll } from "./lib/GameHttpClient";
+import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
 

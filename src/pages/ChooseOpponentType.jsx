@@ -2,7 +2,7 @@ import { evStartLocalComputerGame, evStartMatching } from "../lib/Events.js";
 import { useContext, useState } from "react";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { PleaseWait } from "../components/PleaseWait.jsx";
-import { try_match } from "../lib/GameHttpClient";
+import { try_match } from "../lib/MatchMaker";
 
 function ChooseOpponentType() {
   const eb = useContext(EventBusContext);

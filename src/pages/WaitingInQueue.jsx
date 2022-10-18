@@ -57,11 +57,18 @@ function Waiting() {
 function MatchFailed({ onContinueWaiting }) {
   const eb = useContext(EventBusContext);
   return (
-    <>
-      <h1>匹配失败</h1>
-      <div onClick={onContinueWaiting}>继续等</div>
-      <div onClick={() => eb.publish(evStartLocalComputerGame())}>跟电脑玩</div>
-    </>
+    <main className={"appContainer"}>
+      <h1 className={"header"}>匹配失败</h1>
+      <div className={"btn"} onClick={onContinueWaiting}>
+        继续等
+      </div>
+      <div
+        className={"btn"}
+        onClick={() => eb.publish(evStartLocalComputerGame())}
+      >
+        跟电脑玩
+      </div>
+    </main>
   );
 }
 

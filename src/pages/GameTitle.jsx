@@ -4,7 +4,6 @@ import { EventBusContext } from "../lib/GlobalVariable.js";
 import { css } from "@emotion/react";
 import NameGen from "../lib/NameGen.js";
 import ContentEditable from "react-contenteditable";
-import { noop } from "lodash-es";
 import fetch_local_identity, {
   get_local_nick_name,
   has_registered,
@@ -27,6 +26,11 @@ function Welcome(props) {
 
 function AskLocalIdentity(props) {
   const { name, setName } = props;
+
+  function handleChange(ev) {
+    setName(ev.target.value);
+  }
+
   return (
     <div
       css={css`
@@ -70,7 +74,7 @@ function AskLocalIdentity(props) {
             padding: 5px 12px;
           `}
           html={name}
-          onChange={noop}
+          onChange={handleChange}
         />
       </div>
     </div>

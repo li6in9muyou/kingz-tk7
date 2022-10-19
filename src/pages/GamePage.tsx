@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import {
+  evBackToGameTitle,
   evGameOver,
   evLocalQuit,
   evLocalSaveThenQuit,
@@ -8,6 +9,12 @@ import {
 } from "../lib/Events.js";
 import { css } from "@emotion/react";
 import Game from "../game/Game";
+
+enum OnWhichPage {
+  waiting_init_state,
+  in_game,
+  game_over,
+}
 
 function InGame() {
   const eb = useContext(EventBusContext);
@@ -50,26 +57,51 @@ function InGame() {
   );
 }
 
-enum OnWhichPage {
-  waiting_init_state,
-  in_game,
-  game_over,
-}
-
 function WaitingForInitGameState() {
   return <div className={"header"}>等待游戏的初始状态</div>;
 }
 
+function GameOver({ winner }) {
+  const eb = useContext(EventBusContext);
+  return (
+    <>
+      <main className="appContainer">
+        <h1>游戏结束</h1>
+        <h1
+          className={"floating headline"}
+          css={css`
+            font-size: 5rem;
+          `}
+        >
+          {winner === "local" ? "你赢了" : "你输了"}
+        </h1>
+        <div className={"btn"} onClick={() => eb.publish(evBackToGameTitle())}>
+          返回
+        </div>
+      </main>
+    </>
+  );
+}
+
 function GamePage() {
-  const [whicPage, setWhicPage] = useState(OnWhichPage.in_game);
+  const [whichPage, setWhichPage] = useState(OnWhichPage.in_game);
+  const [winner, setWinner] = useState(null);
+  const eb = useContext(EventBusContext);
+
+  useEffect(() => {
+    eb.subscribe(evGameOver(), (winner) => {
+      setWinner(winner);
+      setWhichPage(OnWhichPage.game_over);
+    });
+  }, []);
 
   return (
     <>
-      {whicPage === OnWhichPage.waiting_init_state && (
+      {whichPage === OnWhichPage.waiting_init_state && (
         <WaitingForInitGameState />
       )}
-      {whicPage === OnWhichPage.in_game && <InGame />}
-      {whicPage === OnWhichPage.game_over && <h1>游戏正常结束</h1>}
+      {whichPage === OnWhichPage.in_game && <InGame />}
+      {whichPage === OnWhichPage.game_over && <GameOver winner={winner} />}
     </>
   );
 }

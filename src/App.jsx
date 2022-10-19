@@ -2,7 +2,6 @@ import GameTitle from "./pages/GameTitle.jsx";
 import { useContext, useEffect, useState } from "react";
 import {
   pgChooseOpponentType,
-  pgGameOver,
   pgGamePage,
   pgGameTitle,
   pgMySavedGame,
@@ -20,7 +19,6 @@ import {
   evResumeSavedGame,
   evBackToGameTitle,
   evRemotePlayerWentOffline,
-  evGameOver,
   evLocalQuit,
   evLocalSaveThenQuit,
   evMatchIsMade,
@@ -33,7 +31,6 @@ import GamePage from "./pages/GamePage";
 import WaitingInQueue from "./pages/WaitingInQueue.jsx";
 import MySavedGame from "./pages/MySavedGame.jsx";
 import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
-import GameOver from "./pages/GameOver.jsx";
 import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
@@ -81,9 +78,6 @@ function App() {
     eb.subscribe(evRemotePlayerWentOffline(), () => {
       setPage(pgRemotePlayerWentOffline);
     });
-    eb.subscribe(evGameOver(), () => {
-      setPage(pgGameOver);
-    });
     eb.subscribe(evLocalQuit(), () => {
       setPage(pgGameTitle);
     });
@@ -102,7 +96,6 @@ function App() {
         {page === pgGamePage && <GamePage />}
         {page === pgWaitingInQueue && <WaitingInQueue />}
         {page === pgRemotePlayerWentOffline && <RemotePlayerWentOffline />}
-        {page === pgGameOver && <GameOver />}
       </NavBar>
     </>
   );

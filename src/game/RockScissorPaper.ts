@@ -1,4 +1,4 @@
-import { map, zip } from "lodash-es";
+import { countBy, identity, map, zip } from "lodash-es";
 
 const MOVES = {
   Scissor: "s",
@@ -25,7 +25,7 @@ export default class {
     request: RSPMoveType[];
     response: RSPMoveType[];
     result: RSPResultType[];
-  };
+  } = { request: [], response: [], result: [] };
 
   constructor(init_state: any) {
     this._state = { ...this._state, ...init_state };
@@ -59,7 +59,7 @@ export default class {
 
   private submitMove(where, cmd) {
     if (where.length < GAME_CONFIG.maxRounds) {
-      where.push(cmd.move);
+      where.push(cmd);
       this.battle();
     }
   }
@@ -73,7 +73,7 @@ export default class {
   }
 
   shouldTerminate() {
-    const lostRoundsCnt = _.countBy(this._state.result, _.identity)[
+    const lostRoundsCnt = countBy(this._state.result, identity)[
       ROUND_RESULT.Lose
     ];
     const gameIsLost = lostRoundsCnt >= Math.ceil(GAME_CONFIG.maxRounds / 2);

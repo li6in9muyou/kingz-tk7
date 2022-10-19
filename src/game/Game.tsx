@@ -17,7 +17,9 @@ function Game() {
   const [cmd, setCmd] = useState("s");
 
   useEffect(() => {
-    eb.subscribe(evUpdateGameState(), () => {});
+    eb.subscribe(evUpdateGameState(), (s) => {
+      setState(s);
+    });
   }, []);
 
   function handleLocalMove() {

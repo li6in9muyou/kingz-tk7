@@ -29,7 +29,7 @@ import {
   evCancelMatching,
 } from "./lib/Events.js";
 import debug from "debug";
-import GamePage from "./pages/GamePage.jsx";
+import GamePage from "./pages/GamePage";
 import WaitingInQueue from "./pages/WaitingInQueue.jsx";
 import MySavedGame from "./pages/MySavedGame.jsx";
 import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";

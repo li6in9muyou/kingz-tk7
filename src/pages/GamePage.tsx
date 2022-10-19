@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import {
   evGameOver,
@@ -7,21 +7,14 @@ import {
   evRemotePlayerWentOffline,
 } from "../lib/Events.js";
 import { css } from "@emotion/react";
+import Game from "../game/Game";
 
-function GamePage() {
+function InGame() {
   const eb = useContext(EventBusContext);
   return (
     <>
       <h1>此处显示一些信息</h1>
-      <main
-        css={css`
-          margin: 20px;
-          aspect-ratio: 1;
-          outline: red 5px solid;
-        `}
-      >
-        此处是棋盘
-      </main>
+      <Game />
       <main className="appContainer">
         <div
           css={css`
@@ -53,6 +46,30 @@ function GamePage() {
           远端玩家因故离线
         </div>
       </main>
+    </>
+  );
+}
+
+enum OnWhichPage {
+  waiting_init_state,
+  in_game,
+  game_over,
+}
+
+function WaitingForInitGameState() {
+  return <div className={"header"}>等待游戏的初始状态</div>;
+}
+
+function GamePage() {
+  const [whicPage, setWhicPage] = useState(OnWhichPage.in_game);
+
+  return (
+    <>
+      {whicPage === OnWhichPage.waiting_init_state && (
+        <WaitingForInitGameState />
+      )}
+      {whicPage === OnWhichPage.in_game && <InGame />}
+      {whicPage === OnWhichPage.game_over && <h1>游戏正常结束</h1>}
     </>
   );
 }

@@ -15,6 +15,7 @@ class EventBus {
     const detail = event.payload;
     console.groupCollapsed(`EventBus: [${label}], detail:`, detail);
     console.log(`detail: ${JSON.stringify(detail)}`);
+
     console.groupCollapsed("stack trace");
     console.trace();
     console.groupEnd();
@@ -25,9 +26,13 @@ class EventBus {
     } else {
       console.group("subscribers");
       for (const subscriber of subs) {
-        subscriber.call(subscriber, detail);
+        console.log(subscriber);
       }
       console.groupEnd();
+
+      for (const subscriber of subs) {
+        subscriber.call(subscriber, detail);
+      }
     }
     console.groupEnd();
   }

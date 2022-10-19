@@ -22,3 +22,15 @@ export const evRegister = (nickname) => ({
   payload: nickname,
 });
 export const evCancelMatching = () => "不等了，跟电脑玩";
+export const evInitGameState = (game_state) => ({
+  type: "初始游戏状态",
+  payload: game_state,
+});
+export const evUpdateGameState = (game_state) => ({
+  type: "更新游戏状态",
+  payload: game_state,
+});
+export const evLocalMove = (game_move) => ({
+  type: "本地玩家出招",
+  payload: game_move,
+});

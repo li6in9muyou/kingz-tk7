@@ -3,6 +3,7 @@ import { EventBusContext } from "../lib/GlobalVariable.js";
 import {
   evBackToGameTitle,
   evGameOver,
+  evInitGameState,
   evLocalQuit,
   evLocalSaveThenQuit,
   evRemotePlayerWentOffline,
@@ -84,7 +85,7 @@ function GameOver({ winner }) {
 }
 
 function GamePage() {
-  const [whichPage, setWhichPage] = useState(OnWhichPage.in_game);
+  const [whichPage, setWhichPage] = useState(OnWhichPage.waiting_init_state);
   const [winner, setWinner] = useState(null);
   const eb = useContext(EventBusContext);
 
@@ -92,6 +93,9 @@ function GamePage() {
     eb.subscribe(evGameOver(), (winner) => {
       setWinner(winner);
       setWhichPage(OnWhichPage.game_over);
+    });
+    eb.subscribe(evInitGameState(), () => {
+      setWhichPage(OnWhichPage.in_game);
     });
   }, []);
 

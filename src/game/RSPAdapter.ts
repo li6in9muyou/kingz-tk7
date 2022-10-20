@@ -11,7 +11,8 @@ export default class {
 
   constructor(private readonly event_bus, init_state) {
     this.game = new RockScissorPaper(init_state);
-    this.event_bus.publish(evInitGameState(init_state));
+    this.event_bus.publish(evInitGameState(this.game.state));
+    this.event_bus.publish(evUpdateGameState(this.game.state));
     this.event_bus.subscribe(evLocalMove(), this.handleLocalMove.bind(this));
   }
 
@@ -32,7 +33,7 @@ export default class {
     this.makeMove(true, m);
   }
 
-  makeOpponentMove(m: RSPMoveType) {
+  handleOpponentMove(m: RSPMoveType) {
     this.makeMove(false, m);
   }
 }

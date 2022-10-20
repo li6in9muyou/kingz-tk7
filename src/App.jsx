@@ -34,11 +34,13 @@ import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
+import RSPAdapter from "./game/RSPAdapter";
+import { fetch_init_game_state } from "./game/OnlineAdapter";
 
 const note = debug("App.jsx");
 
 function App() {
-  const [page, setPage] = useState(pgGameTitle);
+  const [page, setPage] = useState(pgWaitingInQueue);
   const [savedGames, setSavedGames] = useState([]);
   const eb = useContext(EventBusContext);
   useEffect(() => {
@@ -59,6 +61,9 @@ function App() {
     });
     eb.subscribe(evMatchIsMade(), () => {
       setPage(pgGamePage);
+      fetch_init_game_state().then((s) => {
+        new RSPAdapter(eb, s);
+      });
     });
     eb.subscribe(evStartMatching(), () => {
       setPage(pgWaitingInQueue);

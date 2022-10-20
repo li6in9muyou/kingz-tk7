@@ -37,7 +37,7 @@ function Game() {
     >
       <p>Game started, pick your move:</p>
       <p>Played as {Book.nick_name}</p>
-      <p>Previous moves: {join(state.response.map(to_human_readable))}</p>
+      <p>Previous moves: {join(state.response.map(to_human_readable), ", ")}</p>
       <p>Previous results: {state.results}</p>
       <p>
         Opponent moves:{" "}

@@ -53,10 +53,10 @@ function AskLocalIdentity(props) {
     >
       <div className={"nickname-container"}>
         <div className={"label-container"}>
-          <label htmlFor="nickname" className={"headline"}>
+          <label htmlFor="nickname" className={"Theadline"}>
             填入网名
           </label>
-          <div className="btn" onClick={() => setName(NameGen())}>
+          <div className="Tbtn" onClick={() => setName(NameGen())}>
             点击随机生成
           </div>
         </div>

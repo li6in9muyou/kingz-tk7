@@ -25,6 +25,7 @@ import {
   evStartPollingMatchStatus,
   evRegister,
   evCancelMatching,
+  evUpdateGameState,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage";
@@ -35,7 +36,8 @@ import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
 import RSPAdapter from "./game/RSPAdapter";
-import { fetch_init_game_state } from "./game/OnlineAdapter";
+import OnlineAdapter from "./game/OnlineAdapter";
+import { Book } from "./lib/utility";
 
 const note = debug("App.jsx");
 
@@ -61,9 +63,14 @@ function App() {
     });
     eb.subscribe(evMatchIsMade(), () => {
       setPage(pgGamePage);
-      fetch_init_game_state().then((s) => {
-        new RSPAdapter(eb, s);
-      });
+      setTimeout(() => {
+        new OnlineAdapter(Book.match_handle, Book.player_id).subscribe(
+          (game_state) => {
+            eb.publish(evUpdateGameState(game_state));
+          }
+        );
+        new RSPAdapter(eb, {});
+      }, 0);
     });
     eb.subscribe(evStartMatching(), () => {
       setPage(pgWaitingInQueue);

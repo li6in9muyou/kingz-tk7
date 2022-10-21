@@ -31,7 +31,7 @@ class EventBus {
       console.groupEnd();
 
       for (const subscriber of subs) {
-        subscriber.call(subscriber, detail);
+        setTimeout(subscriber, 0, subscriber, detail);
       }
     }
     console.groupEnd();

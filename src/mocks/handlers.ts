@@ -13,6 +13,11 @@ function next_matching_status() {
   return s;
 }
 
+let _rsp_game_state = {
+  version: 0,
+  game_state: { request: [], response: [] },
+};
+
 export const handlers = [
   rest.get("/saved_games/:player_id", async (_, res, ctx) => {
     await sleep(1000);
@@ -46,5 +51,18 @@ export const handlers = [
   rest.get("/match/:match_id/opponent", async (req, res, ctx) => {
     await sleep(1000);
     return res(ctx.text(next_matching_status()));
+  }),
+  rest.put("/match/:match_id/:player_id", async (req, res, ctx) => {
+    await sleep(1000);
+    _rsp_game_state = await req.json();
+    _rsp_game_state.version += 1;
+    return res(ctx.status(200));
+  }),
+  rest.get("/match/:match_id/:player_id", async (req, res, ctx) => {
+    await sleep(1000);
+    if (_rsp_game_state.game_state.request.length < 5) {
+      _rsp_game_state.game_state.request.push("s");
+    }
+    return res(ctx.json(_rsp_game_state));
   }),
 ];

@@ -43,7 +43,6 @@ export default class {
     const cloud_state = (
       await axios.get(`/match/${this.match_handle}/${this.player_id}`)
     ).data;
-    this.version = cloud_state.version;
     if (cloud_state.version > this.version) {
       note(
         "emit\ncloud_state.game_state=%o",
@@ -51,6 +50,7 @@ export default class {
       );
       this.emit(cloud_state.game_state);
     }
+    this.version = cloud_state.version;
   }
 
   private async poll() {

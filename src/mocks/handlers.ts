@@ -20,6 +20,7 @@ const game = new RockScissorPaper({});
 async function cloud() {
   while (!game.shouldTerminate().shouldTerminate) {
     game.makeOpponentMove(sample(["s", "r", "p"]));
+    cloud_version += 1;
     await sleep(200);
   }
 }
@@ -64,6 +65,7 @@ export const handlers = [
     await sleep(1000);
     const client = await req.json();
     game.makeMove(last(client.game_state.response));
+    cloud_version += 1;
     return res(ctx.status(200));
   }),
   rest.get("/match/:match_id/:player_id", async (req, res, ctx) => {

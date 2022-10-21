@@ -3,6 +3,8 @@ import axios from "axios";
 import debug from "debug";
 const note = debug("OnlineAdapter");
 
+let pollStarted = false;
+
 export default class {
   private readonly subs = [];
   private version: number = -1;
@@ -10,11 +12,12 @@ export default class {
   constructor(private readonly match_handle, private readonly player_id) {}
 
   async push_state_to_cloud(state: any) {
+    const pushing_version = ++this.version;
     for (let i = 0; i < 3; i++) {
       const resp = await axios.put(
         `/match/${this.match_handle}/${this.player_id}`,
         {
-          version: ++this.version,
+          version: pushing_version,
           game_state: state,
         }
       );
@@ -34,25 +37,30 @@ export default class {
     for (const sub of this.subs) {
       sub(ev);
     }
-    note("emit");
   }
 
   private async poll_once() {
     const cloud_state = (
       await axios.get(`/match/${this.match_handle}/${this.player_id}`)
     ).data;
-    note("cloud_state=%o", cloud_state);
+    this.version = cloud_state.version;
     if (cloud_state.version > this.version) {
-      this.version = cloud_state.version;
+      note(
+        "emit\ncloud_state.game_state=%o",
+        JSON.stringify(cloud_state.game_state)
+      );
       this.emit(cloud_state.game_state);
     }
   }
 
   private async poll() {
-    for (let i = 0; i < 20; i++) {
+    const saw = pollStarted;
+    do {
+      if (saw) {
+        return;
+      }
       await this.poll_once();
-      note("poll no.%d", i);
-      await sleep(500);
-    }
+      await sleep(2000);
+    } while (true);
   }
 }

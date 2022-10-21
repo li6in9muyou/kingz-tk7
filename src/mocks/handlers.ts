@@ -1,9 +1,10 @@
 import { rest } from "msw";
-import { last, random, times, constant } from "lodash-es";
+import { constant, last, random, sample, times } from "lodash-es";
 import { sleep } from "../lib/utility";
+import RockScissorPaper from "../game/RockScissorPaper";
 
 let _current = 0;
-const _matching_status = [...times(4, constant("waiting")), "success"];
+const _matching_status = [...times(1, constant("waiting")), "success"];
 function next_matching_status() {
   const s = _matching_status[_current];
   _current += 1;
@@ -13,10 +14,17 @@ function next_matching_status() {
   return s;
 }
 
-let _rsp_game_state = {
-  version: 0,
-  game_state: { request: [], response: [] },
-};
+let cloud_version = 0;
+const game = new RockScissorPaper({});
+
+async function cloud() {
+  while (!game.shouldTerminate().shouldTerminate) {
+    game.makeOpponentMove(sample(["s", "r", "p"]));
+    await sleep(200);
+  }
+}
+
+cloud();
 
 export const handlers = [
   rest.get("/saved_games/:player_id", async (_, res, ctx) => {
@@ -54,15 +62,12 @@ export const handlers = [
   }),
   rest.put("/match/:match_id/:player_id", async (req, res, ctx) => {
     await sleep(1000);
-    _rsp_game_state = await req.json();
-    _rsp_game_state.version += 1;
+    const client = await req.json();
+    game.makeMove(last(client.game_state.response));
     return res(ctx.status(200));
   }),
   rest.get("/match/:match_id/:player_id", async (req, res, ctx) => {
     await sleep(1000);
-    if (_rsp_game_state.game_state.request.length < 5) {
-      _rsp_game_state.game_state.request.push("s");
-    }
-    return res(ctx.json(_rsp_game_state));
+    return res(ctx.json({ version: cloud_version, game_state: game.state }));
   }),
 ];

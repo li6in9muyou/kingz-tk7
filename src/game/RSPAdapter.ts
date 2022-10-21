@@ -4,7 +4,9 @@ import {
   evUpdateGameState,
   evInitGameState,
   evGameOver,
+  evPushLocalGameStateToCloud,
 } from "../lib/Events";
+import { isEmpty, last } from "lodash-es";
 
 export default class {
   private game: RockScissorPaper;
@@ -31,9 +33,16 @@ export default class {
 
   handleLocalMove(m: RSPMoveType) {
     this.makeMove(true, m);
+    this.event_bus.publish(evPushLocalGameStateToCloud(this.game.state));
   }
 
   handleOpponentMove(m: RSPMoveType) {
     this.makeMove(false, m);
+  }
+
+  mergeCloudState(game_state: any) {
+    if (!isEmpty(game_state.request)) {
+      this.handleOpponentMove(last(game_state.request));
+    }
   }
 }

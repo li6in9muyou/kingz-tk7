@@ -25,7 +25,7 @@ import {
   evStartPollingMatchStatus,
   evRegister,
   evCancelMatching,
-  evUpdateGameState,
+  evPushLocalGameStateToCloud,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage";
@@ -64,13 +64,19 @@ function App() {
     eb.subscribe(evMatchIsMade(), () => {
       setPage(pgGamePage);
       setTimeout(() => {
-        new OnlineAdapter(Book.match_handle, Book.player_id).subscribe(
-          (game_state) => {
-            eb.publish(evUpdateGameState(game_state));
-          }
+        const onlineAdapter = new OnlineAdapter(
+          Book.match_handle,
+          Book.player_id
         );
-        new RSPAdapter(eb, {});
-      }, 0);
+        eb.subscribe(
+          evPushLocalGameStateToCloud(),
+          onlineAdapter.push_state_to_cloud.bind(onlineAdapter)
+        );
+        const play = new RSPAdapter(eb, {});
+        onlineAdapter.subscribe((game_state) => {
+          play.mergeCloudState(game_state);
+        });
+      }, 100);
     });
     eb.subscribe(evStartMatching(), () => {
       setPage(pgWaitingInQueue);

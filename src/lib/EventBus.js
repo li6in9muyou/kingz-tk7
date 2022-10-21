@@ -13,8 +13,9 @@ class EventBus {
   publish(event) {
     const label = event.type ?? event;
     const detail = event.payload;
-    console.groupCollapsed(`EventBus: [${label}], detail:`, detail);
-    console.log(`detail: ${JSON.stringify(detail)}`);
+    console.groupCollapsed(
+      `EventBus: [${label}]\n detail:${JSON.stringify(detail)}`
+    );
 
     console.groupCollapsed("stack trace");
     console.trace();

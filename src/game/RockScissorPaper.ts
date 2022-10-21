@@ -21,11 +21,14 @@ export type RSPMoveType = keyof typeof MOVES;
 export type RSPResultType = keyof typeof ROUND_RESULT;
 
 export default class {
+  iMoved = false;
+  oppMoved = false;
   _state: {
+    roundIdx: number;
     request: RSPMoveType[];
     response: RSPMoveType[];
     result: RSPResultType[];
-  } = { request: [], response: [], result: [] };
+  } = { request: [], response: [], result: [], roundIdx: 0 };
 
   constructor(init_state: any) {
     this._state = { ...this._state, ...init_state };
@@ -58,26 +61,40 @@ export default class {
   }
 
   private submitMove(where, cmd) {
-    if (where.length < GAME_CONFIG.maxRounds) {
-      where.push(cmd);
-      this.battle();
+    where.push(cmd);
+    this.battle();
+    if (this.iMoved && this.oppMoved) {
+      this.iMoved = false;
+      this.oppMoved = false;
     }
   }
 
   makeMove(cmd: RSPMoveType) {
-    this.submitMove(this._state.response, cmd);
+    if (!this.iMoved) {
+      this.iMoved = true;
+      this.submitMove(this._state.response, cmd);
+    }
   }
 
   makeOpponentMove(cmd: RSPMoveType) {
-    this.submitMove(this._state.request, cmd);
+    if (!this.oppMoved) {
+      this.oppMoved = true;
+      this.submitMove(this._state.request, cmd);
+    }
   }
 
   shouldTerminate() {
-    const lostRoundsCnt = countBy(this._state.result, identity)[
-      ROUND_RESULT.Lose
-    ];
-    const gameIsLost = lostRoundsCnt >= Math.ceil(GAME_CONFIG.maxRounds / 2);
-    return { shouldTerminate: gameIsLost, reason: gameIsLost ? "lost" : "win" };
+    const scores = countBy(this._state.result, identity);
+    const lostRoundsCnt = scores[ROUND_RESULT.Lose];
+    const winRoundsCnt = scores[ROUND_RESULT.Win];
+    const threshold = Math.ceil(GAME_CONFIG.maxRounds / 2);
+    if (lostRoundsCnt >= threshold) {
+      return { shouldTerminate: true, reason: "lost" };
+    }
+    if (winRoundsCnt >= threshold) {
+      return { shouldTerminate: true, reason: "win" };
+    }
+    return { shouldTerminate: false, reason: "" };
   }
 
   get state() {

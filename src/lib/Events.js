@@ -30,6 +30,10 @@ export const evUpdateGameState = (game_state) => ({
   type: "更新游戏状态",
   payload: game_state,
 });
+export const evPushLocalGameStateToCloud = (game_state) => ({
+  type: "推送游戏状态到云端",
+  payload: game_state,
+});
 export const evLocalMove = (game_move) => ({
   type: "本地玩家出招",
   payload: game_move,

@@ -12,7 +12,7 @@ function Game() {
   const [state, setState] = useState({
     request: [],
     response: [],
-    results: [],
+    result: [],
   });
   const [cmd, setCmd] = useState("s");
 
@@ -38,11 +38,12 @@ function Game() {
       <p>Game started, pick your move:</p>
       <p>Played as {Book.nick_name}</p>
       <p>Previous moves: {join(state.response.map(to_human_readable), ", ")}</p>
-      <p>Previous results: {state.results}</p>
+      <p>Previous results: {join(state.result, ", ")}</p>
       <p>
-        Opponent moves:{" "}
+        Opponent moves:
         {join(
-          state.request.slice(0, state.response.length).map(to_human_readable)
+          state.request.slice(0, state.response.length).map(to_human_readable),
+          ", "
         )}
       </p>
       <div onChange={(e) => setCmd(e.target.value)}>

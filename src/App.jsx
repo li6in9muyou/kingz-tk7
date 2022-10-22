@@ -41,8 +41,8 @@ import { Book } from "./lib/utility";
 
 const note = debug("App.jsx");
 
-function App() {
-  const [page, setPage] = useState(pgWaitingInQueue);
+function App(props) {
+  const [page, setPage] = useState(props.page ?? pgGameTitle);
   const [savedGames, setSavedGames] = useState([]);
   const eb = useContext(EventBusContext);
   useEffect(() => {

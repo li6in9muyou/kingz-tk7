@@ -19,7 +19,7 @@ function next_matching_status() {
 }
 
 let cloud_version = 0;
-const game = new RockScissorPaper({});
+let game = new RockScissorPaper({});
 
 async function cloud() {
   while (!game.shouldTerminate().shouldTerminate) {
@@ -63,7 +63,11 @@ export const handlers = [
   }),
   rest.get("/match/:match_id/opponent", async (req, res, ctx) => {
     await sleep(1000);
-    return res(ctx.text(next_matching_status()));
+    const ans = next_matching_status();
+    if (ans === "success") {
+      game = new RockScissorPaper({});
+    }
+    return res(ctx.text(ans));
   }),
   rest.put("/match/:match_id/:player_id", async (req, res, ctx) => {
     await sleep(1000);

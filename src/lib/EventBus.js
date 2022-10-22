@@ -1,5 +1,8 @@
+import { EventBusDebug as ebd } from "../loggers.js";
+
 class EventBus {
   subscription = new Map();
+  pending_events = new Map();
 
   subscribe(event, callback) {
     const label = event.type ?? event;
@@ -7,6 +10,15 @@ class EventBus {
       this.subscription.get(label).push(callback);
     } else {
       this.subscription.set(label, [callback]);
+      if (this.pending_events.has(label)) {
+        ebd(`there are pending events for ${label}`);
+        setTimeout(() => {
+          for (const event of this.pending_events.get(label)) {
+            this.publish(event);
+          }
+          ebd(`flushed events for ${label}`);
+        }, 0);
+      }
     }
   }
 
@@ -23,8 +35,11 @@ class EventBus {
 
     const subs = this.subscription.get(label);
     if (subs === undefined) {
-      console.groupEnd();
-      throw `no subscriber for "${label}"`;
+      if (this.pending_events.has(label)) {
+        this.pending_events.get(label).push(event);
+      } else {
+        this.pending_events.set(label, [event]);
+      }
     } else {
       console.group("subscribers");
       for (const subscriber of subs) {

@@ -4,7 +4,11 @@ import { sleep } from "../lib/utility";
 import RockScissorPaper from "../game/RockScissorPaper";
 
 let _current = 0;
-const _matching_status = [...times(1, constant("waiting")), "success"];
+const _seconds_before_match_is_made = 4;
+const _matching_status = [
+  ...times(_seconds_before_match_is_made, constant("waiting")),
+  "success",
+];
 function next_matching_status() {
   const s = _matching_status[_current];
   _current += 1;

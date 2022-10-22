@@ -23,7 +23,8 @@ class EventBus {
 
     const subs = this.subscription.get(label);
     if (subs === undefined) {
-      console.warn(`no subscriber for "${label}"`);
+      console.groupEnd();
+      throw `no subscriber for "${label}"`;
     } else {
       console.group("subscribers");
       for (const subscriber of subs) {

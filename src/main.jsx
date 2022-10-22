@@ -4,13 +4,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import EventBus from "./lib/EventBus.js";
 import { EventBusContext } from "./lib/GlobalVariable.js";
-import { pgWaitingInQueue } from "./lib/PageSymbol";
+import { pgGameTitle } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
 if (import.meta.env.DEV) {
   import("./mocks/browser").then((module) => {
     module.default.start();
   });
+  localStorage.setItem("debug", "*");
 }
 
 Book.load({
@@ -23,7 +24,7 @@ Book.load({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <EventBusContext.Provider value={EventBus}>
-      <App page={pgWaitingInQueue} />
+      <App page={pgGameTitle} />
     </EventBusContext.Provider>
   </React.StrictMode>
 );

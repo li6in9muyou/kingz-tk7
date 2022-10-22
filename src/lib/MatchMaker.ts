@@ -2,6 +2,7 @@ import axios from "axios";
 import fetch_local_identity from "./LocalIdentity";
 import { evCloudDeclineMatch, evMatchIsMade } from "./Events.js";
 import { Book, sleep } from "./utility";
+import { MatchMakingTrace as mmt } from "../loggers";
 
 type MatchHandle = string;
 
@@ -71,10 +72,13 @@ export async function poll_match() {
 let lock = false;
 
 export function poll(eb) {
+  mmt("poll");
   if (lock) {
+    mmt("without lock, poll returns");
     return;
   }
   lock = true;
+  mmt("with lock, poll");
   poll_match()
     .then((r) => {
       if (stopPolling) {

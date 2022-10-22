@@ -38,7 +38,7 @@ import fetchSavedGames from "./lib/FetchSavedGames.js";
 import RSPAdapter from "./game/RSPAdapter";
 import OnlineAdapter from "./game/OnlineAdapter";
 import { Book } from "./lib/utility";
-
+import { MatchMakingTrace as mmt } from "./loggers.js";
 const note = debug("App.jsx");
 
 function App(props) {
@@ -58,11 +58,15 @@ function App(props) {
     eb.subscribe(evResumeSavedGame(), () => {
       setPage(pgChooseOpponentType);
     });
+    mmt("App subscribe evStartPollingMatchStatus()");
     eb.subscribe(evStartPollingMatchStatus(), () => {
       poll(eb);
     });
+    mmt("App subscribe evMatchIsMade()");
     eb.subscribe(evMatchIsMade(), () => {
+      mmt("received evMatchIsMade()");
       setPage(pgGamePage);
+      mmt("setPage(pgGamePage)");
       setTimeout(() => {
         const onlineAdapter = new OnlineAdapter(
           Book.match_handle,
@@ -76,8 +80,11 @@ function App(props) {
         onlineAdapter.subscribe((game_state) => {
           play.mergeCloudState(game_state);
         });
+        mmt("bind: evPushLocalGameStateToCloud -> push_state_to_cloud");
+        mmt("bind: onlineAdapter -> mergeCloudState");
       }, 100);
     });
+    mmt("App subscribe evStartMatching()");
     eb.subscribe(evStartMatching(), () => {
       setPage(pgWaitingInQueue);
     });

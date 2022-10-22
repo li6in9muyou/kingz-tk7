@@ -10,24 +10,29 @@ import {
 import { EventBusContext } from "../lib/GlobalVariable.js";
 import { cancel_match } from "../lib/MatchMaker";
 import { PleaseWait } from "../components/PleaseWait.jsx";
+import { MatchMakingTrace as mmt } from "../loggers";
 
 function Waiting() {
   const eb = useContext(EventBusContext);
   const [loading, setLoading] = useState(false);
 
   function onCloudDeclineMatch() {
+    mmt("user cancel match");
     eb.publish(evCloudDeclineMatch());
   }
 
   function handleCancelMatching() {
     setLoading(true);
+    mmt("user cancel match");
     cancel_match().then(() => {
       setLoading(false);
+      mmt("eb.publish(evStartLocalComputerGame())");
       eb.publish(evStartLocalComputerGame());
     });
   }
 
   useEffect(() => {
+    mmt("eb.publish(evStartPollingMatchStatus())");
     eb.publish(evStartPollingMatchStatus());
   }, []);
 

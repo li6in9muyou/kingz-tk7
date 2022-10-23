@@ -6,17 +6,11 @@ import {
   evGameOver,
   evPushLocalGameStateToCloud,
 } from "../lib/Events";
-import { isEmpty, last } from "lodash-es";
+import IGameAgent from "./IGameAgent";
 
-export default class {
-  private game: RockScissorPaper;
-
-  constructor(private readonly event_bus, init_state) {
-    this.game = new RockScissorPaper(init_state);
-    this.event_bus.publish(evInitGameState(this.game.state));
-    this.event_bus.publish(evUpdateGameState(this.game.state));
-    this.event_bus.subscribe(evLocalMove(), this.handleLocalMove.bind(this));
-  }
+export default class RSPAdapter implements IGameAgent {
+  private game: RockScissorPaper | null = null;
+  private event_bus: any;
 
   private makeMove(isLocal: boolean, cmd: RSPMoveType) {
     if (isLocal) {
@@ -40,9 +34,22 @@ export default class {
     this.makeMove(false, m);
   }
 
-  mergeCloudState(game_state: any) {
-    if (!isEmpty(game_state.request)) {
-      this.handleOpponentMove(last(game_state.request));
+  handleCloudUpdate(game_state: any) {
+    if (this.game === null) {
+      this.game = new RockScissorPaper(game_state);
+      this.event_bus.publish(evInitGameState(this.game.state));
     }
+    for (
+      let i = this.game.state.request.length;
+      i < game_state.request.length;
+      i++
+    ) {
+      this.handleOpponentMove(game_state.request[i]);
+    }
+  }
+
+  attach_event_bus(event_bus: any) {
+    this.event_bus = event_bus;
+    this.event_bus.subscribe(evLocalMove(), this.handleLocalMove.bind(this));
   }
 }

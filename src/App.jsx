@@ -78,17 +78,18 @@ function App(props) {
           evPushLocalGameStateToCloud(),
           onlineAdapter.push_state_to_cloud.bind(onlineAdapter)
         );
-        const play = new RSPAdapter(eb, {});
+        const play = new RSPAdapter();
+        play.attach_event_bus(eb);
         onlineAdapter.attach_event_bus(eb);
         eb.subscribe(evCloudSendEvent(), (game_state) => {
-          play.mergeCloudState(game_state);
+          play.handleCloudUpdate(game_state);
         });
         const close_polling = () => onlineAdapter.close();
         eb.subscribe(evLocalQuit(), close_polling);
         eb.subscribe(evLocalSaveThenQuit(), close_polling);
         eb.subscribe(evGameOver(), close_polling);
         mmt("bind: evPushLocalGameStateToCloud -> push_state_to_cloud");
-        mmt("bind: onlineAdapter -> mergeCloudState");
+        mmt("bind: onlineAdapter -> handleCloudUpdate");
       }, 100);
     });
     mmt("App subscribe evStartMatching()");

@@ -1,15 +1,28 @@
 import { sleep } from "../lib/utility";
+import { evCloudSendEvent } from "../lib/Events";
 import axios from "axios";
 import debug from "debug";
-const note = debug("OnlineAdapter");
+import IRemoteAgent from "./IRemoteAgent";
+const note = debug("Trace:OnlineAdapter");
 
 let pollStarted = false;
 
-export default class {
-  private readonly subs = [];
+export default class RegularPollingAdapter implements IRemoteAgent {
+  private pleaseStopPolling: boolean = false;
+  private eb: any;
   private version: number = -1;
 
   constructor(private readonly match_handle, private readonly player_id) {}
+
+  attach_event_bus(event_bus: any) {
+    this.eb = event_bus;
+    this.poll();
+  }
+
+  async close(): Promise<void> {
+    this.pleaseStopPolling = true;
+    return;
+  }
 
   async push_state_to_cloud(state: any) {
     const pushing_version = ++this.version;
@@ -27,16 +40,10 @@ export default class {
     }
   }
 
-  subscribe(callback) {
-    this.subs.push(callback);
-    note("subscribed: %o", callback);
-    this.poll();
-  }
-
   private emit(ev: any) {
-    for (const sub of this.subs) {
-      sub(ev);
-    }
+    const e = evCloudSendEvent(ev);
+    note(`emitting ${e} to event_bus`);
+    this.eb.publish(e);
   }
 
   private async poll_once() {
@@ -58,6 +65,9 @@ export default class {
     do {
       if (saw) {
         return;
+      }
+      if (this.pleaseStopPolling) {
+        break;
       }
       await this.poll_once();
       await sleep(2000);

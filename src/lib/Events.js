@@ -38,3 +38,7 @@ export const evLocalMove = (game_move) => ({
   type: "本地玩家出招",
   payload: game_move,
 });
+export const evCloudSendEvent = (payload) => ({
+  type: "云端发来信息",
+  payload,
+});

@@ -26,6 +26,8 @@ import {
   evRegister,
   evCancelMatching,
   evPushLocalGameStateToCloud,
+  evCloudSendEvent,
+  evGameOver,
 } from "./lib/Events.js";
 import debug from "debug";
 import GamePage from "./pages/GamePage";
@@ -36,7 +38,7 @@ import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
 import RSPAdapter from "./game/RSPAdapter";
-import OnlineAdapter from "./game/OnlineAdapter";
+import { default as OnlineAdapter } from "./game/OnlineAdapter";
 import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
 const note = debug("App.jsx");
@@ -77,9 +79,14 @@ function App(props) {
           onlineAdapter.push_state_to_cloud.bind(onlineAdapter)
         );
         const play = new RSPAdapter(eb, {});
-        onlineAdapter.subscribe((game_state) => {
+        onlineAdapter.attach_event_bus(eb);
+        eb.subscribe(evCloudSendEvent(), (game_state) => {
           play.mergeCloudState(game_state);
         });
+        const close_polling = () => onlineAdapter.close();
+        eb.subscribe(evLocalQuit(), close_polling);
+        eb.subscribe(evLocalSaveThenQuit(), close_polling);
+        eb.subscribe(evGameOver(), close_polling);
         mmt("bind: evPushLocalGameStateToCloud -> push_state_to_cloud");
         mmt("bind: onlineAdapter -> mergeCloudState");
       }, 100);

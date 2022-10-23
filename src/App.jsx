@@ -7,7 +7,7 @@ import {
   pgMySavedGame,
   pgRemotePlayerWentOffline,
   pgWaitingInQueue,
-} from "./lib/PageSymbol.js";
+} from "./lib/PageSymbol";
 import ChooseOpponentType from "./pages/ChooseOpponentType.jsx";
 import { NavBar } from "./components/NavBar.jsx";
 import { EventBusContext } from "./lib/GlobalVariable.js";
@@ -43,8 +43,11 @@ import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
 const note = debug("App.jsx");
 
-function App(props) {
-  const [page, setPage] = useState(props.page ?? pgGameTitle);
+function App() {
+  const [page, setPage] = useState(Book.page);
+  useEffect(() => {
+    Book.page = page;
+  }, [page]);
   const [savedGames, setSavedGames] = useState([]);
   const eb = useContext(EventBusContext);
   useEffect(() => {

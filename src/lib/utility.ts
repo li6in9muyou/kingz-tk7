@@ -1,12 +1,23 @@
+import { pgGameTitle } from "./PageSymbol";
+
 export const sleep = (milliSeconds: number) =>
   new Promise((resolve) => setTimeout(resolve, milliSeconds));
 
 class LocalStore {
   load(state) {
-    this.player_id = state?.player_id;
-    this.secret = state?.secret;
-    this.nick_name = state?.nick_name;
-    this.match_handle = state?.match_handle;
+    this.player_id = state?.player_id ?? "";
+    this.secret = state?.secret ?? "";
+    this.nick_name = state?.nick_name ?? "";
+    this.match_handle = state?.match_handle ?? "";
+    this.page = state?.page ?? pgGameTitle;
+  }
+
+  get page(): string {
+    return localStorage.getItem("kingz-player-page");
+  }
+
+  set page(page) {
+    localStorage.setItem("kingz-player-page", page);
   }
 
   get player_id(): string {

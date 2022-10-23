@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import EventBus from "./lib/EventBus.js";
 import { EventBusContext } from "./lib/GlobalVariable.js";
-import { pgGameTitle } from "./lib/PageSymbol";
+import { pgWaitingInQueue } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
 if (import.meta.env.DEV) {
@@ -14,17 +14,22 @@ if (import.meta.env.DEV) {
   localStorage.setItem("debug", "*");
 }
 
-Book.load({
-  player_id: "test_player_id",
-  secret: "test_secret",
-  nick_name: "test nick name",
-  match_handle: "test_match_handle",
-});
+if (import.meta.env.DEV) {
+  Book.load({
+    player_id: "test_player_id",
+    secret: "test_secret",
+    nick_name: "test nick name",
+    match_handle: "test_match_handle",
+    page: pgWaitingInQueue,
+  });
+} else {
+  Book.load();
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <EventBusContext.Provider value={EventBus}>
-      <App page={pgGameTitle} />
+      <App />
     </EventBusContext.Provider>
   </React.StrictMode>
 );

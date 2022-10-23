@@ -64,6 +64,7 @@ export default class {
     where.push(cmd);
     this.battle();
     if (this.iMoved && this.oppMoved) {
+      this._state.roundIdx += 1;
       this.iMoved = false;
       this.oppMoved = false;
     }

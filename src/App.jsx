@@ -37,7 +37,8 @@ import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
-import RSPAdapter from "./game/RSPAdapter";
+import RSPAdapter from "./game/RSP/RSPAdapter";
+import { default as RSPGame } from "./game/RSP/Game";
 import { default as OnlineAdapter } from "./game/OnlineAdapter";
 import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
@@ -129,7 +130,7 @@ function App() {
         {page === pgGameTitle && <GameTitle hasRegistered={has_registered()} />}
         {page === pgMySavedGame && <MySavedGame savedGames={savedGames} />}
         {page === pgChooseOpponentType && <ChooseOpponentType />}
-        {page === pgGamePage && <GamePage />}
+        {page === pgGamePage && <GamePage GameView={RSPGame} />}
         {page === pgWaitingInQueue && <WaitingInQueue />}
         {page === pgRemotePlayerWentOffline && <RemotePlayerWentOffline />}
       </NavBar>

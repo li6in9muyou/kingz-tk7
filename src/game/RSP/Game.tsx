@@ -1,26 +1,21 @@
 import { css } from "@emotion/react";
-import { useContext, useEffect, useState } from "react";
-import { Book } from "../lib/utility";
-import { EventBusContext } from "../lib/GlobalVariable";
-import { evUpdateGameState, evLocalMove } from "../lib/Events.js";
+import { ChangeEvent, useContext, useState } from "react";
+import { Book } from "../../lib/utility";
+import { EventBusContext } from "../../lib/GlobalVariable";
+import { evLocalMove } from "../../lib/Events.js";
 import { join } from "lodash-es";
+import { GameStateContext } from "../../pages/GamePage";
 
 const to_human_readable = (ch) => ({ p: "paper", s: "scissor", r: "rock" }[ch]);
 
 function Game() {
   const eb = useContext(EventBusContext);
-  const [state, setState] = useState({
-    request: [],
-    response: [],
-    result: [],
-  });
+  const state = useContext(GameStateContext) as {
+    response: string[];
+    request: string[];
+    result: string[];
+  };
   const [cmd, setCmd] = useState("s");
-
-  useEffect(() => {
-    eb.subscribe(evUpdateGameState(), (s) => {
-      setState(s);
-    });
-  }, []);
 
   function handleLocalMove() {
     eb.publish(evLocalMove(cmd));

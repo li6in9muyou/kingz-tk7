@@ -25,6 +25,7 @@ function InGame() {
       <Game />
       <main className="appContainer">
         <div
+          // @ts-ignore
           css={css`
             display: flex;
           `}
@@ -70,6 +71,7 @@ function GameOver({ winner }) {
         <h1>游戏结束</h1>
         <h1
           className={"floating headline"}
+          // @ts-ignore
           css={css`
             font-size: 5rem;
           `}

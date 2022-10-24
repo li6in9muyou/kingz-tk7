@@ -36,6 +36,16 @@ body {
   min-width: 150px;
   max-width: 250px;
 }
+.Tbtn {
+  text-align: center;
+  background-color: transparent;
+  outline: gray solid 2px;
+  padding: 6px;
+  margin: 6px;
+  cursor: pointer;
+
+
+}
 
 .header {
   margin-top: 2rem;
@@ -58,6 +68,18 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.Theadline {
+  text-align: center;
+  font-size: 2rem;
+  max-height: 4rem;
+  font-size: 160%;
+  font-family: sans-serif;
+  font-weight: bold;
+  background-image: linear-gradient(60deg, #e21143, #ffb03a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 
 .floating {
   animation: float 2s ease-in-out infinite;

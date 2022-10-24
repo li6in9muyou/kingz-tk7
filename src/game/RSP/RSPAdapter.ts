@@ -5,8 +5,8 @@ import {
   evInitGameState,
   evGameOver,
   evPushLocalGameStateToCloud,
-} from "../lib/Events";
-import IGameAgent from "./IGameAgent";
+} from "../../lib/Events";
+import IGameAgent from "../IGameAgent";
 
 export default class RSPAdapter implements IGameAgent {
   private game: RockScissorPaper | null = null;

@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import { constant, last, random, sample, times } from "lodash-es";
 import { sleep } from "../lib/utility";
-import RockScissorPaper from "../game/RockScissorPaper";
+import RockScissorPaper from "../game/RSP/RockScissorPaper";
 
 let _current = 0;
 const _seconds_before_match_is_made = 4;

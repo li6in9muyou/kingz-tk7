@@ -99,8 +99,9 @@ function GamePage({ GameView }) {
       setWinner(winner);
       setWhichPage(OnWhichPage.game_over);
     });
-    eb.subscribe(evInitGameState(), () => {
+    eb.subscribe(evInitGameState(), (s) => {
       setWhichPage(OnWhichPage.in_game);
+      setGameState(s);
     });
     eb.subscribe(evUpdateGameState(), (s) => {
       setGameState(s);

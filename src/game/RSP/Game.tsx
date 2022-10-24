@@ -28,6 +28,7 @@ function Game() {
 
   return (
     <main
+      // @ts-ignore
       css={css`
         margin: 20px;
         aspect-ratio: 1;
@@ -46,7 +47,9 @@ function Game() {
           ", "
         )}
       </p>
-      <div onChange={(e) => setCmd(e.target.value)}>
+      <div
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setCmd(e.target.value)}
+      >
         <input
           type="radio"
           id="move-s"

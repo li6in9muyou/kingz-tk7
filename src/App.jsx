@@ -37,14 +37,11 @@ import RemotePlayerWentOffline from "./pages/RemotePlayerWentOffline.jsx";
 import { cancel_match, poll } from "./lib/MatchMaker";
 import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
-import RSPAdapter from "./game/RSP/RSPAdapter";
-import { default as RSPGame } from "./game/RSP/Game";
-import { default as OnlineAdapter } from "./game/OnlineAdapter";
 import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
 const note = debug("App.jsx");
 
-function App() {
+function App({ GameAdapter, OnlineAdapter, GameView }) {
   const [page, setPage] = useState(Book.page);
   useEffect(() => {
     Book.page = page;
@@ -82,7 +79,7 @@ function App() {
           evPushLocalGameStateToCloud(),
           onlineAdapter.push_state_to_cloud.bind(onlineAdapter)
         );
-        const play = new RSPAdapter();
+        const play = new GameAdapter();
         play.attach_event_bus(eb);
         onlineAdapter.attach_event_bus(eb);
         eb.subscribe(evCloudSendEvent(), (game_state) => {
@@ -130,7 +127,7 @@ function App() {
         {page === pgGameTitle && <GameTitle hasRegistered={has_registered()} />}
         {page === pgMySavedGame && <MySavedGame savedGames={savedGames} />}
         {page === pgChooseOpponentType && <ChooseOpponentType />}
-        {page === pgGamePage && <GamePage GameView={RSPGame} />}
+        {page === pgGamePage && <GamePage GameView={GameView} />}
         {page === pgWaitingInQueue && <WaitingInQueue />}
         {page === pgRemotePlayerWentOffline && <RemotePlayerWentOffline />}
       </NavBar>

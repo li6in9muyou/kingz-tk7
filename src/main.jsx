@@ -7,6 +7,10 @@ import { EventBusContext } from "./lib/GlobalVariable.js";
 import { pgWaitingInQueue } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
+import RSPAdapter from "./game/RSP/RSPAdapter";
+import { default as RSPGame } from "./game/RSP/Game";
+import RegularPollingAdapter from "./game/OnlineAdapter";
+
 if (import.meta.env.DEV) {
   import("./mocks/browser").then((module) => {
     module.default.start();
@@ -29,7 +33,11 @@ if (import.meta.env.DEV) {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <EventBusContext.Provider value={EventBus}>
-      <App />
+      <App
+        GameView={RSPGame}
+        OnlineAdapter={RegularPollingAdapter}
+        GameAdapter={RSPAdapter}
+      />
     </EventBusContext.Provider>
   </React.StrictMode>
 );

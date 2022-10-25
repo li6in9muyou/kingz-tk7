@@ -52,7 +52,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <App
         GameView={GameView}
         OnlineAdapter={RegularPollingAdapter}
-        GameAdapter={GameAdapter}
+        GameAdapter={new GameAdapter()}
       />
     </EventBusContext.Provider>
   </React.StrictMode>

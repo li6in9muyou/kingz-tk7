@@ -41,7 +41,7 @@ import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
 const note = debug("App.jsx");
 
-function App({ GameAdapter, OnlineAdapter, GameView }) {
+function App({ GameAdapter: play, OnlineAdapter, GameView }) {
   const [page, setPage] = useState(Book.page);
   useEffect(() => {
     Book.page = page;
@@ -79,7 +79,6 @@ function App({ GameAdapter, OnlineAdapter, GameView }) {
           evPushLocalGameStateToCloud(),
           onlineAdapter.push_state_to_cloud.bind(onlineAdapter)
         );
-        const play = new GameAdapter();
         play.attach_event_bus(eb);
         onlineAdapter.attach_event_bus(eb);
         eb.subscribe(evCloudSendEvent(), (game_state) => {

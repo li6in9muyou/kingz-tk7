@@ -14,11 +14,11 @@ import axios from "axios";
 import { isEmpty } from "lodash-es";
 
 if (import.meta.env.DEV) {
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-  axios.defaults.baseURL = baseURL;
+  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
   localStorage.setItem("debug", "*");
 
   if (import.meta.env.MODE === "dev_java_backend") {
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
     if (isEmpty(baseURL)) {
       throw "env VITE_API_BASE_URL is not set!";
     }

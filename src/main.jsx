@@ -7,9 +7,9 @@ import { EventBusContext } from "./lib/GlobalVariable.js";
 import { pgWaitingInQueue } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
-import GameAdapter from "./game/BiggerNumberWins/BNWAdapter";
-import { default as GameView } from "./game/BiggerNumberWins/Game";
-import BiggerNumberWinsGameCloud from "./game/BiggerNumberWins/mock_server";
+import GameAdapter from "./game/TicTacToe/Adapter";
+import { default as GameView } from "./game/TicTacToe/Game";
+import { default as MockCloud } from "./game/TicTacToe/mock_server";
 
 import RegularPollingAdapter from "./game/OnlineAdapter";
 import axios from "axios";
@@ -28,7 +28,7 @@ if (import.meta.env.DEV) {
   }
   if (import.meta.env.MODE === "dev_mock") {
     import("./mocks/generic_server").then((module) => {
-      module.default(new BiggerNumberWinsGameCloud()).start();
+      module.default(new MockCloud()).start();
     });
     console.info("using mock service worker");
   }

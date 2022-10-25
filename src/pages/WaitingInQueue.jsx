@@ -46,15 +46,19 @@ function Waiting() {
             不等了，跟电脑玩
           </div>
         )}
-        <div className={"btn debug"} onClick={onCloudDeclineMatch}>
-          服务器返回失败或者客户端决定不再等待
-        </div>
-        <div
-          className={"btn debug"}
-          onClick={() => eb.publish(evMatchIsMade())}
-        >
-          匹配成功
-        </div>
+        {import.meta.env.DEV && (
+          <>
+            <div className={"btn debug"} onClick={onCloudDeclineMatch}>
+              服务器返回失败或者客户端决定不再等待
+            </div>
+            <div
+              className={"btn debug"}
+              onClick={() => eb.publish(evMatchIsMade())}
+            >
+              匹配成功
+            </div>
+          </>
+        )}
       </main>
     </>
   );

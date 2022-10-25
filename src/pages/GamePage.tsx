@@ -39,20 +39,24 @@ function InGame({ GameView, GameState }) {
             先退出
           </div>
         </div>
-        <div
-          className={"btn debug"}
-          onClick={() =>
-            eb.publish(evGameOver(Math.random() > 0.5 ? "local" : "remote"))
-          }
-        >
-          游戏正常结束
-        </div>
-        <div
-          className={"btn debug"}
-          onClick={() => eb.publish(evRemotePlayerWentOffline())}
-        >
-          远端玩家因故离线
-        </div>
+        {import.meta.env.DEV && (
+          <>
+            <div
+              className={"btn debug"}
+              onClick={() =>
+                eb.publish(evGameOver(Math.random() > 0.5 ? "local" : "remote"))
+              }
+            >
+              游戏正常结束
+            </div>
+            <div
+              className={"btn debug"}
+              onClick={() => eb.publish(evRemotePlayerWentOffline())}
+            >
+              远端玩家因故离线
+            </div>
+          </>
+        )}
       </main>
     </>
   );

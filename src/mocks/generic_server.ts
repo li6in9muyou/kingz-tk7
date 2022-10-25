@@ -27,6 +27,8 @@ export interface IGameCloud {
   on_match_is_made: (request: any) => void;
 }
 
+let cloud_version = 0;
+
 export const get_handlers = (cloud: IGameCloud) => [
   rest.get("/saved_games/:player_id", async (_, res, ctx) => {
     await sleep(1000);
@@ -67,12 +69,13 @@ export const get_handlers = (cloud: IGameCloud) => [
   }),
   rest.put("/match/:match_id/:player_id", async (req, res, ctx) => {
     await sleep(1000);
-    const client_game_state = await req.json();
+    const client_game_state = (await req.json()).game_state;
     cloud.update_game_state(
       req.params.match_id as string,
       req.params.player_id as string,
       client_game_state
     );
+    cloud_version += 1;
     return res(ctx.status(200));
   }),
   rest.get("/match/:match_id/:player_id", async (req, res, ctx) => {
@@ -81,7 +84,9 @@ export const get_handlers = (cloud: IGameCloud) => [
       req.params.match_id as string,
       req.params.player_id as string
     );
-    return res(ctx.json(cloud_game_state));
+    return res(
+      ctx.json({ version: cloud_version, game_state: cloud_game_state })
+    );
   }),
 ];
 

@@ -3,15 +3,16 @@ import { EventBusContext } from "../../lib/GlobalVariable";
 import { evLocalMove, evUpdateGameState } from "../../lib/Events";
 
 export default function BiggerNumberWins({
-  state,
+  state: initState,
 }: {
   state: { remote_moved: boolean; my_number: number };
 }) {
   const eb = useContext(EventBusContext);
   const [number, setNumber] = useState(50);
-  const [gameState, setGameState] = useState(state);
+  const [gameState, setGameState] = useState(initState);
 
   function handleLocalMove() {
+    setGameState({ ...gameState, my_number: number });
     eb.publish(evLocalMove(number));
   }
 
@@ -45,7 +46,7 @@ export default function BiggerNumberWins({
           </div>
         </>
       ) : (
-        <div className="headline">You picked {state.my_number}</div>
+        <div className="headline">You picked {gameState.my_number}</div>
       )}
     </>
   );

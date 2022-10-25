@@ -18,23 +18,29 @@ export default function BiggerNumberWins() {
   return (
     <>
       <div className="headline">
-        pick your number{" "}
         {state.remote_moved
           ? "remote has picked a number"
           : "remote is picking"}
       </div>
-      <input
-        type="range"
-        name=""
-        id=""
-        max={100}
-        min={0}
-        defaultValue={number}
-        onChange={(ev) => setNumber(Number(ev.target.value))}
-      />
-      <div className="btn" onClick={handleLocalMove}>
-        Go!
-      </div>
+      {state.my_number === null ? (
+        <>
+          <div className="headline">pick your number</div>
+          <input
+            type="range"
+            name=""
+            id=""
+            max={100}
+            min={0}
+            defaultValue={number}
+            onChange={(ev) => setNumber(Number(ev.target.value))}
+          />
+          <div className="btn" onClick={handleLocalMove}>
+            Go!
+          </div>
+        </>
+      ) : (
+        <div className="headline">You picked {state.my_number}</div>
+      )}
     </>
   );
 }

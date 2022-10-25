@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EventBusContext } from "../../lib/GlobalVariable";
-import { evLocalMove } from "../../lib/Events";
+import { evLocalMove, evUpdateGameState } from "../../lib/Events";
 
 export default function BiggerNumberWins({
   state,
@@ -9,19 +9,26 @@ export default function BiggerNumberWins({
 }) {
   const eb = useContext(EventBusContext);
   const [number, setNumber] = useState(50);
+  const [gameState, setGameState] = useState(state);
 
   function handleLocalMove() {
     eb.publish(evLocalMove(number));
   }
 
+  useEffect(() => {
+    eb.subscribe(evUpdateGameState(), (s) => {
+      setGameState(s);
+    });
+  }, []);
+
   return (
     <>
       <div className="headline">
-        {state.remote_moved === true
+        {gameState.remote_moved === true
           ? "remote has picked a number"
           : "remote is picking"}
       </div>
-      {state.my_number === null ? (
+      {gameState.my_number === null ? (
         <>
           <div className="headline">pick your number</div>
           <input

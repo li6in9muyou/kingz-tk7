@@ -17,12 +17,12 @@ enum OnWhichPage {
   game_over,
 }
 
-function InGame({ GameView }) {
+function InGame({ GameView, GameState }) {
   const eb = useContext(EventBusContext);
   return (
     <>
       <h1>此处显示一些信息</h1>
-      <GameView />
+      <GameView state={GameState} />
       <main className="appContainer">
         <div
           // @ts-ignore
@@ -114,9 +114,7 @@ function GamePage({ GameView }) {
         <WaitingForInitGameState />
       )}
       {whichPage === OnWhichPage.in_game && (
-        <GameStateContext.Provider value={gameState}>
-          <InGame GameView={GameView} />
-        </GameStateContext.Provider>
+        <InGame GameView={GameView} GameState={gameState} />
       )}
       {whichPage === OnWhichPage.game_over && <GameOver winner={winner} />}
     </>

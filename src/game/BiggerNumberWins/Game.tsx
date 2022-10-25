@@ -1,14 +1,13 @@
 import { useContext, useState } from "react";
-import { GameStateContext } from "../../pages/GamePage";
 import { EventBusContext } from "../../lib/GlobalVariable";
 import { evLocalMove } from "../../lib/Events";
 
-export default function BiggerNumberWins() {
+export default function BiggerNumberWins({
+  state,
+}: {
+  state: { remote_moved: boolean; my_number: number };
+}) {
   const eb = useContext(EventBusContext);
-  const state = useContext(GameStateContext) as {
-    remote_moved: boolean;
-    my_number: number;
-  };
   const [number, setNumber] = useState(50);
 
   function handleLocalMove() {

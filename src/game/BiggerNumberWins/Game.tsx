@@ -18,7 +18,7 @@ export default function BiggerNumberWins() {
   return (
     <>
       <div className="headline">
-        {state.remote_moved
+        {state.remote_moved === true
           ? "remote has picked a number"
           : "remote is picking"}
       </div>

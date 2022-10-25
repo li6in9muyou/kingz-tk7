@@ -1,6 +1,5 @@
 import { IGameCloud } from "../../mocks/generic_server";
 import { BNWGameState } from "./BNWAdapter";
-import { noop } from "lodash-es";
 
 class BiggerNumberWinsGameCloud implements IGameCloud {
   game: BNWGameState = {
@@ -23,7 +22,13 @@ class BiggerNumberWinsGameCloud implements IGameCloud {
     this.game.my_number = game_state.my_number;
   }
 
-  on_match_is_made = noop;
+  on_match_is_made() {
+    this.game = {
+      remote_number: null,
+      remote_moved: false,
+      my_number: null,
+    };
+  }
 }
 
 export default BiggerNumberWinsGameCloud;

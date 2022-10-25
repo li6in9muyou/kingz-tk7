@@ -10,12 +10,26 @@ import { Book } from "./lib/utility";
 import RSPAdapter from "./game/RSP/RSPAdapter";
 import { default as RSPGame } from "./game/RSP/Game";
 import RegularPollingAdapter from "./game/OnlineAdapter";
+import axios from "axios";
+import { isEmpty } from "lodash-es";
 
 if (import.meta.env.DEV) {
-  import("./mocks/browser").then((module) => {
-    module.default.start();
-  });
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  axios.defaults.baseURL = baseURL;
   localStorage.setItem("debug", "*");
+
+  if (import.meta.env.MODE === "dev_java_backend") {
+    if (isEmpty(baseURL)) {
+      throw "env VITE_API_BASE_URL is not set!";
+    }
+    console.info("using java backend at", baseURL);
+  }
+  if (import.meta.env.MODE === "dev_mock") {
+    import("./mocks/browser").then((module) => {
+      module.default.start();
+    });
+    console.info("using mock service worker");
+  }
 }
 
 if (import.meta.env.DEV) {

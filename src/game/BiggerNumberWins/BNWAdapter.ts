@@ -15,7 +15,7 @@ export interface BNWGameState {
 
 export default class BNWAdapter implements IGameAgent {
   event_bus: any;
-  game: BNWGameState;
+  game: BNWGameState = null;
 
   private should_terminate(): boolean {
     return this.game.remote_number !== null;

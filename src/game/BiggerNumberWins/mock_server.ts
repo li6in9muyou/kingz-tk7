@@ -19,8 +19,8 @@ class BiggerNumberWinsGameCloud implements IGameCloud {
     game_state: any
   ): void {
     this.game.remote_moved = true;
-    this.game.remote_number = game_state.my_number;
-    this.game.my_number = Math.floor(Math.random() * 100 + 1);
+    this.game.remote_number = Math.floor(Math.random() * 100 + 1);
+    this.game.my_number = game_state.my_number;
   }
 
   on_match_is_made = noop;

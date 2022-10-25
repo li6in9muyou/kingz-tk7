@@ -9,6 +9,8 @@ import { Book } from "./lib/utility";
 
 import GameAdapter from "./game/BiggerNumberWins/BNWAdapter";
 import { default as GameView } from "./game/BiggerNumberWins/Game";
+import BiggerNumberWinsGameCloud from "./game/BiggerNumberWins/mock_server";
+
 import RegularPollingAdapter from "./game/OnlineAdapter";
 import axios from "axios";
 import { isEmpty } from "lodash-es";
@@ -25,8 +27,8 @@ if (import.meta.env.DEV) {
     console.info("using java backend at", baseURL);
   }
   if (import.meta.env.MODE === "dev_mock") {
-    import("./mocks/browser").then((module) => {
-      module.default.start();
+    import("./mocks/generic_server").then((module) => {
+      module.default(new BiggerNumberWinsGameCloud()).start();
     });
     console.info("using mock service worker");
   }

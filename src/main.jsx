@@ -7,8 +7,8 @@ import { EventBusContext } from "./lib/GlobalVariable.js";
 import { pgWaitingInQueue } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
-import RSPAdapter from "./game/RSP/RSPAdapter";
-import { default as RSPGame } from "./game/RSP/Game";
+import GameAdapter from "./game/BiggerNumberWins/BNWAdapter";
+import { default as GameView } from "./game/BiggerNumberWins/Game";
 import RegularPollingAdapter from "./game/OnlineAdapter";
 import axios from "axios";
 import { isEmpty } from "lodash-es";
@@ -48,9 +48,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <EventBusContext.Provider value={EventBus}>
       <App
-        GameView={RSPGame}
+        GameView={GameView}
         OnlineAdapter={RegularPollingAdapter}
-        GameAdapter={RSPAdapter}
+        GameAdapter={GameAdapter}
       />
     </EventBusContext.Provider>
   </React.StrictMode>

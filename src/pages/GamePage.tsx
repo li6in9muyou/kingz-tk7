@@ -7,7 +7,6 @@ import {
   evLocalQuit,
   evLocalSaveThenQuit,
   evRemotePlayerWentOffline,
-  evUpdateGameState,
 } from "../lib/Events.js";
 import { css } from "@emotion/react";
 
@@ -17,12 +16,12 @@ enum OnWhichPage {
   game_over,
 }
 
-function InGame({ GameView }) {
+function InGame({ GameView, GameState }) {
   const eb = useContext(EventBusContext);
   return (
     <>
       <h1>此处显示一些信息</h1>
-      <GameView />
+      <GameView state={GameState} />
       <main className="appContainer">
         <div
           // @ts-ignore
@@ -92,7 +91,7 @@ function GamePage({ GameView }) {
   const [whichPage, setWhichPage] = useState(OnWhichPage.waiting_init_state);
   const [winner, setWinner] = useState(null);
   const eb = useContext(EventBusContext);
-  const [gameState, setGameState] = useState({});
+  const [initGameState, setInitGameState] = useState({});
 
   useEffect(() => {
     eb.subscribe(evGameOver(), (winner) => {
@@ -101,10 +100,7 @@ function GamePage({ GameView }) {
     });
     eb.subscribe(evInitGameState(), (s) => {
       setWhichPage(OnWhichPage.in_game);
-      setGameState(s);
-    });
-    eb.subscribe(evUpdateGameState(), (s) => {
-      setGameState(s);
+      setInitGameState(s);
     });
   }, []);
 
@@ -114,9 +110,7 @@ function GamePage({ GameView }) {
         <WaitingForInitGameState />
       )}
       {whichPage === OnWhichPage.in_game && (
-        <GameStateContext.Provider value={gameState}>
-          <InGame GameView={GameView} />
-        </GameStateContext.Provider>
+        <InGame GameView={GameView} GameState={initGameState} />
       )}
       {whichPage === OnWhichPage.game_over && <GameOver winner={winner} />}
     </>

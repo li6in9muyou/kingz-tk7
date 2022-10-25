@@ -34,12 +34,17 @@ export default class BNWAdapter implements IGameAgent {
     this.game.remote_moved = game_state.remote_moved;
     this.game.remote_number = game_state.remote_number;
     this.event_bus.publish(evUpdateGameState(this.game));
+    this.check_game_over();
   }
 
   handleLocalMove(move: number) {
     this.game.my_number = move;
     this.event_bus.publish(evPushLocalGameStateToCloud(this.game));
     this.event_bus.publish(evUpdateGameState(this.game));
+    this.check_game_over();
+  }
+
+  private check_game_over() {
     if (this.should_terminate()) {
       this.event_bus.publish(
         evGameOver(

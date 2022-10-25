@@ -1,28 +1,35 @@
-import { useContext, useState } from "react";
-import { GameStateContext } from "../../pages/GamePage";
+import { useContext, useEffect, useState } from "react";
 import { EventBusContext } from "../../lib/GlobalVariable";
-import { evLocalMove } from "../../lib/Events";
+import { evLocalMove, evUpdateGameState } from "../../lib/Events";
 
-export default function BiggerNumberWins() {
+export default function BiggerNumberWins({
+  state: initState,
+}: {
+  state: { remote_moved: boolean; my_number: number };
+}) {
   const eb = useContext(EventBusContext);
-  const state = useContext(GameStateContext) as {
-    remote_moved: boolean;
-    my_number: number;
-  };
   const [number, setNumber] = useState(50);
+  const [gameState, setGameState] = useState(initState);
 
   function handleLocalMove() {
+    setGameState({ ...gameState, my_number: number });
     eb.publish(evLocalMove(number));
   }
+
+  useEffect(() => {
+    eb.subscribe(evUpdateGameState(), (s) => {
+      setGameState(s);
+    });
+  }, []);
 
   return (
     <>
       <div className="headline">
-        {state.remote_moved === true
+        {gameState.remote_moved === true
           ? "remote has picked a number"
           : "remote is picking"}
       </div>
-      {state.my_number === null ? (
+      {gameState.my_number === null ? (
         <>
           <div className="headline">pick your number</div>
           <input
@@ -39,7 +46,7 @@ export default function BiggerNumberWins() {
           </div>
         </>
       ) : (
-        <div className="headline">You picked {state.my_number}</div>
+        <div className="headline">You picked {gameState.my_number}</div>
       )}
     </>
   );

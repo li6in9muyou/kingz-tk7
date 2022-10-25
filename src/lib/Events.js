@@ -24,11 +24,11 @@ export const evRegister = (nickname) => ({
 export const evCancelMatching = () => "不等了，跟电脑玩";
 export const evInitGameState = (game_state) => ({
   type: "初始游戏状态",
-  payload: game_state,
+  payload: { ...game_state },
 });
 export const evUpdateGameState = (game_state) => ({
   type: "更新游戏状态",
-  payload: game_state,
+  payload: { ...game_state },
 });
 export const evPushLocalGameStateToCloud = (game_state) => ({
   type: "推送游戏状态到云端",

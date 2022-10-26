@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import EventBus from "./lib/EventBus.js";
 import { EventBusContext } from "./lib/GlobalVariable.js";
-import { pgWaitingInQueue } from "./lib/PageSymbol";
+import { pgGameTitle } from "./lib/PageSymbol";
 import { Book } from "./lib/utility";
 
 import GameAdapter from "./game/TicTacToe/Adapter";
@@ -40,7 +40,7 @@ if (import.meta.env.DEV) {
     secret: "test_secret",
     nick_name: "test nick name",
     match_handle: "test_match_handle",
-    page: pgWaitingInQueue,
+    page: pgGameTitle,
   });
 } else {
   Book.load();

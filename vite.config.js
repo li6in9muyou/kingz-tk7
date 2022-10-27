@@ -11,4 +11,5 @@ export default defineConfig({
       },
     }),
   ],
+  base: "/kingz-tk7/",
 });

@@ -17,7 +17,7 @@ jobs:
           yarn
           yarn build
         env:
-          VITE_API_BASE_URL: ${{ secrets.KINGZ_API_BASE_URL }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

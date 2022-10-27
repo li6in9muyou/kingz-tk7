@@ -42,3 +42,5 @@ export const evCloudSendEvent = (payload) => ({
   type: "云端发来信息",
   payload,
 });
+export const evCancelBlockLocalInput = "允许本地玩家出招";
+export const evBlockLocalInput = "禁止本地玩家出招";

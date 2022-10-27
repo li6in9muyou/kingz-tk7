@@ -5,6 +5,8 @@ import {
   evInitGameState,
   evGameOver,
   evPushLocalGameStateToCloud,
+  evBlockLocalInput,
+  evCancelBlockLocalInput,
 } from "../../lib/Events";
 import { constant, times, uniq } from "lodash-es";
 
@@ -77,6 +79,7 @@ export default class Adapter implements IGameAgent {
     this.game.request = [...game_state.request];
     this.event_bus.publish(evUpdateGameState(this.game));
     this.check_game_over();
+    this.event_bus.publish(evCancelBlockLocalInput(this.game));
   }
 
   handleLocalMove(move: [number, number]) {
@@ -91,6 +94,7 @@ export default class Adapter implements IGameAgent {
     this.event_bus.publish(evPushLocalGameStateToCloud(this.game));
     this.event_bus.publish(evUpdateGameState(this.game));
     this.check_game_over();
+    this.event_bus.publish(evBlockLocalInput(this.game));
   }
 
   private check_game_over() {

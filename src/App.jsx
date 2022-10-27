@@ -58,8 +58,9 @@ function App({ GameAdapter: play, OnlineAdapter, GameView }) {
     eb.subscribe(evStartNewGame(), () => {
       setPage(pgChooseOpponentType);
     });
-    eb.subscribe(evResumeSavedGame(), () => {
+    eb.subscribe(evResumeSavedGame(), (handle) => {
       setPage(pgChooseOpponentType);
+      Book.match_handle = handle;
     });
     mmt("App subscribe evStartPollingMatchStatus()");
     eb.subscribe(evStartPollingMatchStatus(), () => {

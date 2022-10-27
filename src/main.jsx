@@ -16,21 +16,20 @@ import axios from "axios";
 import { isEmpty } from "lodash-es";
 
 if (import.meta.env.DEV) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
   localStorage.setItem("debug", "*");
 
-  if (import.meta.env.MODE === "dev_java_backend") {
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
-    if (isEmpty(baseURL)) {
-      throw "env VITE_API_BASE_URL is not set!";
-    }
-    console.info("using java backend at", baseURL);
-  }
   if (import.meta.env.MODE === "dev_mock") {
     import("./mocks/generic_server").then((module) => {
       module.default(new MockCloud()).start();
     });
     console.info("using mock service worker");
+  } else {
+    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
+    if (isEmpty(baseURL)) {
+      throw "env VITE_API_BASE_URL is not set!";
+    }
+    console.info("using backend at", baseURL);
   }
 }
 

@@ -6,6 +6,7 @@ import NameGen from "../lib/NameGen.js";
 import ContentEditable from "react-contenteditable";
 import { get_local_nick_name } from "../lib/LocalIdentity";
 import { PleaseWait } from "../components/PleaseWait.jsx";
+import { sleep } from "../lib/utility";
 
 function Welcome(props) {
   return (
@@ -109,7 +110,7 @@ function GameTitle(props) {
     } else {
       eb.publish(evRegister(name));
     }
-    return eb.publish(evMySavedGame());
+    return sleep(1000).then(() => eb.publish(evMySavedGame()));
   }
 
   return (

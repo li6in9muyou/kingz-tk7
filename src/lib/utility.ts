@@ -16,6 +16,10 @@ class LocalStore {
     return this.nick_name !== "";
   }
 
+  has_player_id(): boolean {
+    return this.player_id !== "";
+  }
+
   get page(): string {
     return localStorage.getItem("kingz-player-page");
   }

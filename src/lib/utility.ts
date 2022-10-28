@@ -5,10 +5,10 @@ export const sleep = (milliSeconds: number) =>
 
 class LocalStore {
   load(state) {
-    this.player_id = state?.player_id ?? "";
-    this.secret = state?.secret ?? "";
-    this.nick_name = state?.nick_name ?? "";
-    this.match_handle = state?.match_handle ?? "";
+    this.player_id = state?.player_id ?? this.player_id;
+    this.secret = state?.secret ?? this.secret;
+    this.nick_name = state?.nick_name ?? this.nick_name;
+    this.match_handle = state?.match_handle ?? this.match_handle;
     this.page = state?.page ?? pgGameTitle;
   }
 

@@ -59,7 +59,7 @@ export const get_handlers = (cloud: IGameCloud) => [
     await sleep(1000);
     return res(ctx.status(200));
   }),
-  rest.get("/match/:match_id/opponent", async (req, res, ctx) => {
+  rest.get("/match/:player_id/:match_id/opponent", async (req, res, ctx) => {
     await sleep(1000);
     const ans = next_matching_status();
     if (ans === "success") {

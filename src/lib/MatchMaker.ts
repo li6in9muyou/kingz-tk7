@@ -12,7 +12,7 @@ export async function try_match(): Promise<MatchHandle> {
   stopPolling = false;
   const local_handle = await fetch_local_identity(null);
   const match_handle = (await axios.post(`/match/${local_handle.handle}`)).data;
-  Book.match_handle = match_handle;
+  Book.match_handle = match_handle.match_handle;
   return match_handle;
 }
 
@@ -32,7 +32,7 @@ export async function poll_match() {
   let retry = 3;
   while (r?.status !== 200 && retry > 0) {
     try {
-      r = await axios.get(`/match/${match_handle}/opponent`);
+      r = await axios.get(`/match/${match_handle}/${Book.player_id}/opponent`);
       switch (r.data) {
         case "success": {
           return true;
@@ -88,7 +88,7 @@ export function poll(eb) {
       if (r) {
         eb.publish(evMatchIsMade());
       } else {
-        poll(eb);
+        sleep(1000).then(() => poll(eb));
       }
     })
     .catch((err) => {

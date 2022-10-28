@@ -11,7 +11,7 @@ import GameAdapter from "./game/TicTacToe/Adapter";
 import { default as GameView } from "./game/TicTacToe/Game";
 import { default as MockCloud } from "./game/TicTacToe/mock_server";
 
-import RegularPollingAdapter from "./game/OnlineAdapter";
+import RegularPollingAdapter from "./lib/OnlineAdapter";
 import axios from "axios";
 
 if (import.meta.env.DEV) {

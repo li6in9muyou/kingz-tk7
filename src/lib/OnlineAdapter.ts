@@ -1,8 +1,8 @@
-import { sleep } from "../lib/utility";
-import { evCloudSendEvent } from "../lib/Events";
+import { sleep } from "./utility";
+import { evCloudSendEvent } from "./Events";
 import axios from "axios";
 import debug from "debug";
-import IRemoteAgent from "./IRemoteAgent";
+import IRemoteAgent from "../game/IRemoteAgent";
 const note = debug("Trace:OnlineAdapter");
 
 let pollStarted = false;

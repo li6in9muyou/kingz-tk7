@@ -13,25 +13,21 @@ import { default as MockCloud } from "./game/TicTacToe/mock_server";
 
 import RegularPollingAdapter from "./game/OnlineAdapter";
 import axios from "axios";
-import { isEmpty } from "lodash-es";
 
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", "*");
-
-  if (import.meta.env.MODE === "dev_mock") {
-    import("./mocks/generic_server").then((module) => {
-      module.default(new MockCloud()).start();
-    });
-    console.info("using mock service worker");
-  } else {
-    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
-    if (isEmpty(baseURL)) {
-      throw "env VITE_API_BASE_URL is not set!";
-    }
-    console.info("using backend at", baseURL);
-  }
 }
+
+if (import.meta.env.MODE === "dev_mock") {
+  import("./mocks/generic_server").then((module) => {
+    module.default(new MockCloud()).start();
+  });
+  console.info("using mock service worker");
+}
+
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+axios.defaults.baseURL = baseURL;
+console.info("using backend at", baseURL);
 
 if (import.meta.env.DEV) {
   Book.load({

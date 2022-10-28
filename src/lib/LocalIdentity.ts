@@ -14,9 +14,7 @@ function get_secret() {
   return getBrowserFingerprint();
 }
 
-export function has_registered() {
-  return Book.nick_name !== null;
-}
+export const has_registered = Book.has_registered.bind(Book);
 
 async function fetch_handle(secret, name: string) {
   const cache = Book.player_id;

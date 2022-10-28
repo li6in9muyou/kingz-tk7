@@ -12,6 +12,10 @@ class LocalStore {
     this.page = state?.page ?? pgGameTitle;
   }
 
+  has_registered(): boolean {
+    return this.nick_name !== "";
+  }
+
   get page(): string {
     return localStorage.getItem("kingz-player-page");
   }

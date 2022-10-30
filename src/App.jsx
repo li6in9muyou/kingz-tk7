@@ -85,6 +85,7 @@ function App({ GameAdapter: play, OnlineAdapter, GameView }) {
         eb.subscribe(evCloudSendEvent(), (game_state) => {
           play.handleCloudUpdate(game_state);
         });
+        eb.publish(evPushLocalGameStateToCloud(play.game));
         const close_polling = () => onlineAdapter.close();
         eb.subscribe(evLocalQuit(), close_polling);
         eb.subscribe(evLocalSaveThenQuit(), close_polling);

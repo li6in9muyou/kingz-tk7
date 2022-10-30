@@ -88,12 +88,6 @@ export default class Adapter implements IGameAgent {
   }
 
   handleLocalMove(move: [number, number]) {
-    if (
-      this.game.response.length !== 0 &&
-      this.game.response.length >= this.game.request.length
-    ) {
-      return;
-    }
     this.game.response.push(move);
     this.game.response = uniq(this.game.response);
     this.event_bus.publish(evPushLocalGameStateToCloud(this.game));

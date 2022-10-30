@@ -19,9 +19,6 @@ export const has_registered = Book.has_registered.bind(Book);
 
 async function fetch_handle(secret, name: string) {
   lit(`fetching player handle with ${secret} ${name}`);
-  if (Book.has_player_id()) {
-    return Book.player_id;
-  }
   const handle = (
     await axios.get("/player_handle", {
       params: {

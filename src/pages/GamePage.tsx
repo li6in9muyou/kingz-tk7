@@ -20,7 +20,6 @@ function InGame({ GameView, GameState }) {
   const eb = useContext(EventBusContext);
   return (
     <>
-      <h1>此处显示一些信息</h1>
       <GameView state={GameState} />
       <main className="appContainer">
         <div

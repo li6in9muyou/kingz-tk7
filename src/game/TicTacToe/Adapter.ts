@@ -79,7 +79,7 @@ export default class Adapter implements IGameAgent {
     this.game.request = [...game_state.request];
     this.event_bus.publish(evUpdateGameState(this.game));
     this.check_game_over();
-    this.event_bus.publish(evCancelBlockLocalInput(this.game));
+    this.event_bus.publish(evCancelBlockLocalInput());
   }
 
   handleLocalMove(move: [number, number]) {
@@ -94,7 +94,7 @@ export default class Adapter implements IGameAgent {
     this.event_bus.publish(evPushLocalGameStateToCloud(this.game));
     this.event_bus.publish(evUpdateGameState(this.game));
     this.check_game_over();
-    this.event_bus.publish(evBlockLocalInput(this.game));
+    this.event_bus.publish(evBlockLocalInput());
   }
 
   private check_game_over() {

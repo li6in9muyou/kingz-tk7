@@ -25,7 +25,7 @@ class LocalStore {
   }
 
   set page(page) {
-    localStorage.setItem("kingz-player-page", page);
+    localStorage.setItem("kingz-player-page", page ?? "");
   }
 
   get player_id(): string {
@@ -36,7 +36,7 @@ class LocalStore {
     if (value === null) {
       localStorage.removeItem("kingz-player-handle");
     }
-    localStorage.setItem("kingz-player-handle", value);
+    localStorage.setItem("kingz-player-handle", value ?? "");
   }
 
   get secret(): string {
@@ -44,7 +44,7 @@ class LocalStore {
   }
 
   set secret(value: string) {
-    localStorage.setItem("kingz-secret", value);
+    localStorage.setItem("kingz-secret", value ?? "");
   }
 
   get nick_name() {
@@ -52,7 +52,7 @@ class LocalStore {
   }
 
   set nick_name(value) {
-    localStorage.setItem("kingz-nickName", value);
+    localStorage.setItem("kingz-nickName", value ?? "");
   }
 
   get match_handle() {
@@ -60,7 +60,7 @@ class LocalStore {
   }
 
   set match_handle(value) {
-    localStorage.setItem("kingz-match-handle", value);
+    localStorage.setItem("kingz-match-handle", value ?? "");
   }
 }
 

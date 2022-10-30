@@ -39,6 +39,7 @@ import fetch_local_identity, { has_registered } from "./lib/LocalIdentity";
 import fetchSavedGames from "./lib/FetchSavedGames.js";
 import { Book } from "./lib/utility";
 import { MatchMakingTrace as mmt } from "./loggers.js";
+import { getGridGameInitialState } from "./game/TicTacToe/Adapter";
 const note = debug("App.jsx");
 
 function App({ GameAdapter: play, OnlineAdapter, GameView }) {
@@ -67,14 +68,15 @@ function App({ GameAdapter: play, OnlineAdapter, GameView }) {
       poll(eb);
     });
     mmt("App subscribe evMatchIsMade()");
-    eb.subscribe(evMatchIsMade(), () => {
+    eb.subscribe(evMatchIsMade(), (which) => {
       mmt("received evMatchIsMade()");
       setPage(pgGamePage);
       mmt("setPage(pgGamePage)");
       setTimeout(() => {
         const onlineAdapter = new OnlineAdapter(
           Book.match_handle,
-          Book.player_id
+          Book.player_id,
+          which
         );
         eb.subscribe(
           evPushLocalGameStateToCloud(),
@@ -85,7 +87,7 @@ function App({ GameAdapter: play, OnlineAdapter, GameView }) {
         eb.subscribe(evCloudSendEvent(), (game_state) => {
           play.handleCloudUpdate(game_state);
         });
-        eb.publish(evPushLocalGameStateToCloud(play.game));
+        eb.publish(evPushLocalGameStateToCloud(getGridGameInitialState()));
         const close_polling = () => onlineAdapter.close();
         eb.subscribe(evLocalQuit(), close_polling);
         eb.subscribe(evLocalSaveThenQuit(), close_polling);

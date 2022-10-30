@@ -15,6 +15,11 @@ export interface IGridGameState {
   response: [number, number][];
 }
 
+export const getGridGameInitialState: () => IGridGameState = () => ({
+  request: [],
+  response: [],
+});
+
 type Piece = "x" | "o" | "";
 
 export default class Adapter implements IGameAgent {

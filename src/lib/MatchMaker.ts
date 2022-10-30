@@ -33,13 +33,18 @@ export async function poll_match() {
   while (r?.status !== 200 && retry > 0) {
     try {
       r = await axios.get(`/match/${match_handle}/${Book.player_id}/opponent`);
-      switch (r.data) {
+      let result = r.data;
+      if (result.startsWith("success")) {
+        result = result.slice(0, -1);
+      }
+
+      switch (result) {
         case "success": {
-          return true;
+          return [true, Number(r.data.at(-1))];
         }
         case "fail":
         case "waiting": {
-          return false;
+          return [false, 0];
         }
         default: {
           console.warn(`poll_match(): unknown status code ${r.status}`, r);
@@ -85,8 +90,10 @@ export function poll(eb) {
         return;
       }
       lock = false;
-      if (r) {
-        eb.publish(evMatchIsMade());
+      const [success, which] = r;
+      mmt(`success, which = ${success}, ${which}`);
+      if (success) {
+        eb.publish(evMatchIsMade(which));
       } else {
         sleep(1000).then(() => poll(eb));
       }

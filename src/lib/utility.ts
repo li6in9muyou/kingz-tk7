@@ -12,6 +12,14 @@ class LocalStore {
     this.page = state?.page ?? pgGameTitle;
   }
 
+  private getter(label: string) {
+    return localStorage.getItem(`kingz-${label}`);
+  }
+
+  private setter(label: string, value) {
+    return localStorage.setItem(`kingz-${label}`, value ?? "");
+  }
+
   has_registered(): boolean {
     return this.nick_name !== "";
   }
@@ -21,46 +29,43 @@ class LocalStore {
   }
 
   get page(): string {
-    return localStorage.getItem("kingz-player-page");
+    return this.getter("player-page");
   }
 
   set page(page) {
-    localStorage.setItem("kingz-player-page", page ?? "");
+    this.setter("player-page", page);
   }
 
   get player_id(): string {
-    return localStorage.getItem("kingz-player-handle");
+    return this.getter("player-handle");
   }
 
   set player_id(value: string) {
-    if (value === null) {
-      localStorage.removeItem("kingz-player-handle");
-    }
-    localStorage.setItem("kingz-player-handle", value ?? "");
+    this.setter("player-handle", value);
   }
 
   get secret(): string {
-    return localStorage.getItem("kingz-secret");
+    return this.getter("secret");
   }
 
   set secret(value: string) {
-    localStorage.setItem("kingz-secret", value ?? "");
+    this.setter("secret", value);
   }
 
   get nick_name() {
-    return localStorage.getItem("kingz-nickName");
+    return this.getter("nickName");
   }
 
   set nick_name(value) {
-    localStorage.setItem("kingz-nickName", value ?? "");
+    this.setter("nickName", value);
   }
 
   get match_handle() {
-    return localStorage.getItem("kingz-match-handle");
+    return this.getter("match-handle");
   }
 
   set match_handle(value) {
-    localStorage.setItem("kingz-match-handle", value ?? "");
+    this.setter("match-handle", value);
   }
 }
 

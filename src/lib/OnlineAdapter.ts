@@ -60,7 +60,7 @@ export default class RegularPollingAdapter implements IRemoteAgent {
     const cloud_state = (
       await axios.get(`/match/${this.match_handle}/${this.player_id}`)
     ).data;
-    if (cloud_state.version > this.version) {
+    if (cloud_state.game_state !== undefined) {
       note(
         "emit\ncloud_state.game_state=%o",
         JSON.stringify(cloud_state.game_state)

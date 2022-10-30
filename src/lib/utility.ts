@@ -13,11 +13,11 @@ class LocalStore {
   }
 
   private getter(label: string) {
-    return localStorage.getItem(`kingz-${label}`);
+    return sessionStorage.getItem(`kingz-${label}`);
   }
 
   private setter(label: string, value) {
-    return localStorage.setItem(`kingz-${label}`, value ?? "");
+    return sessionStorage.setItem(`kingz-${label}`, value ?? "");
   }
 
   has_registered(): boolean {
